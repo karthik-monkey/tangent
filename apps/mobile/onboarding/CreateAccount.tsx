@@ -29,7 +29,7 @@ export default function CreateAccount({ onSignUp, onLogIn }: CreateAccountProps)
         <View style={styles.textContainer}>
           <Text style={styles.title}>Create your{'\n'}Tangent account</Text>
           <Text style={styles.description}>
-            Tangent is a powerful tool that allows you to easily{'\n'}send, receive, and track all your transactions.
+            Tangent is a powerful tool that allows you to easily send, receive, and track all your transactions.
           </Text>
         </View>
 
@@ -56,7 +56,7 @@ export default function CreateAccount({ onSignUp, onLogIn }: CreateAccountProps)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1A1A1A",
+    backgroundColor: "black",
   },
   content: {
     flex: 1,
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   signUpButton: {
-    backgroundColor: "#6366F1",
+    backgroundColor: "white",
     paddingVertical: 16,
     borderRadius: 25,
     alignItems: "center",
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   signUpButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "white",
+    color: "black",
   },
   logInButton: {
     backgroundColor: "transparent",
