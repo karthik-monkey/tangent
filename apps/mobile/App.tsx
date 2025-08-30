@@ -1,40 +1,39 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import SplashScreen from './onboarding/splash';
-import Onboarding1 from './onboarding/onboarding1';
-import Onboarding2 from './onboarding/onboarding2';
-import Onboarding3 from './onboarding/onboarding3';
+import SwipeableOnboarding from './onboarding/SwipeableOnboarding';
+import CreateAccount from './onboarding/CreateAccount';
 import OnboardingScreen from './onboarding/loginpost';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('splash');
 
   const handleSplashFinish = () => {
-    setCurrentScreen('onboarding1');
+    setCurrentScreen('onboarding');
   };
 
-  const handleOnboarding1Next = () => {
-    setCurrentScreen('onboarding2');
+  const handleOnboardingFinish = () => {
+    setCurrentScreen('createAccount');
   };
 
-  const handleOnboarding2Next = () => {
-    setCurrentScreen('onboarding3');
+  const handleSignUp = () => {
+    // Handle sign up logic
+    console.log('Sign up pressed');
   };
 
-  const handleOnboarding3Finish = () => {
-    setCurrentScreen('login');
+  const handleLogIn = () => {
+    // Handle log in logic
+    console.log('Log in pressed');
   };
 
   const renderCurrentScreen = () => {
     switch (currentScreen) {
       case 'splash':
         return <SplashScreen onFinish={handleSplashFinish} />;
-      case 'onboarding1':
-        return <Onboarding1 onNext={handleOnboarding1Next} />;
-      case 'onboarding2':
-        return <Onboarding2 onNext={handleOnboarding2Next} />;
-      case 'onboarding3':
-        return <Onboarding3 onFinish={handleOnboarding3Finish} />;
+      case 'onboarding':
+        return <SwipeableOnboarding onFinish={handleOnboardingFinish} />;
+      case 'createAccount':
+        return <CreateAccount onSignUp={handleSignUp} onLogIn={handleLogIn} />;
       case 'login':
         return <OnboardingScreen />;
       default:
@@ -45,7 +44,7 @@ export default function App() {
   return (
     <>
       {renderCurrentScreen()}
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
     </>
   );
 }

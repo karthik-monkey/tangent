@@ -37,7 +37,7 @@ export default function Onboarding1({ onNext }: Onboarding1Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "black",
   },
   content: {
     flex: 1,
@@ -55,10 +55,10 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#E5E5E5",
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
   },
   activeDot: {
-    backgroundColor: "#000000",
+    backgroundColor: "white",
     width: 24,
   },
   mainContent: {
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: "white",
     textAlign: "center",
     lineHeight: 40,
     letterSpacing: -0.5,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   nextButton: {
-    backgroundColor: "#000000",
+    backgroundColor: "white",
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
@@ -87,6 +87,6 @@ const styles = StyleSheet.create({
   nextButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "white",
+    color: "black",
   },
 }); 
