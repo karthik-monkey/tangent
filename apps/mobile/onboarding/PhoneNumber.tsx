@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput } from "react-native";
 
 interface PhoneNumberProps {
@@ -7,10 +7,30 @@ interface PhoneNumberProps {
 }
 
 export default function PhoneNumber({ onNext, onBack }: PhoneNumberProps) {
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneDigits, setPhoneDigits] = useState(["", "", "", "", "", "", "", "", "", ""]);
+  const inputRefs = useRef<(TextInput | null)[]>([]);
+  const placeholderNumbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 
   const handleNext = () => {
-    onNext(phoneNumber || "123-456-7890"); // Default for testing
+    const phoneNumber = phoneDigits.join("");
+    onNext(phoneNumber || "1234567890"); // Default for testing
+  };
+
+  const handleDigitChange = (text: string, index: number) => {
+    const newDigits = [...phoneDigits];
+    newDigits[index] = text;
+    setPhoneDigits(newDigits);
+
+    // Auto-focus next input
+    if (text && index < 9) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyPress = (key: string, index: number) => {
+    if (key === 'Backspace' && !phoneDigits[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
   };
 
   return (
@@ -27,33 +47,51 @@ export default function PhoneNumber({ onNext, onBack }: PhoneNumberProps) {
         </View>
 
         {/* Title and Description */}
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>Phone Number</Text>
+        <View style={styles.titleSection}>
+          <Text style={styles.title}>Enter your phone number</Text>
           <Text style={styles.subtitle}>
-            Please enter your phone number to secure your account
+            We'll send you a verification code to confirm your number
           </Text>
         </View>
 
-        {/* Phone Input */}
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.phoneInput}
-            placeholder="(555) 123-4567"
-            placeholderTextColor="rgba(255, 255, 255, 0.5)"
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-            keyboardType="phone-pad"
-            autoFocus
-          />
+        {/* Phone Number Input Section */}
+        <View style={styles.inputSection}>
+          <View style={styles.phoneContainer}>
+            {phoneDigits.map((digit, index) => (
+              <React.Fragment key={index}>
+                <TextInput
+                  ref={(ref) => {
+                    inputRefs.current[index] = ref;
+                  }}
+                  style={[
+                    styles.digitInput,
+                    digit ? styles.digitInputFilled : null
+                  ]}
+                  value={digit}
+                  placeholder={placeholderNumbers[index]}
+                  placeholderTextColor="rgba(255, 255, 255, 0.3)"
+                  onChangeText={(text) => handleDigitChange(text, index)}
+                  onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}
+                  maxLength={1}
+                  keyboardType="number-pad"
+                  textAlign="center"
+                  autoFocus={index === 0}
+                />
+                {(index === 2 || index === 5) && (
+                  <Text style={styles.dash}>-</Text>
+                )}
+              </React.Fragment>
+            ))}
+          </View>
         </View>
 
-        {/* Next Button */}
-        <View style={styles.buttonContainer}>
+        {/* Send Code Button */}
+        <View style={styles.buttonSection}>
           <TouchableOpacity 
-            style={styles.continueButton}
+            style={styles.sendCodeButton}
             onPress={handleNext}
           >
-            <Text style={styles.continueButtonText}>Next</Text>
+            <Text style={styles.sendCodeButtonText}>Send Code</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -68,15 +106,14 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 32,
-    justifyContent: "space-between",
-    paddingTop: 16,
+    paddingHorizontal: 24,
   },
   header: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 32,
+    alignItems: "center",
+    paddingTop: 16,
+    marginBottom: 40,
   },
   backButton: {
     width: 44,
@@ -100,56 +137,64 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "300",
   },
-  textContainer: {
-    alignItems: "center",
-    marginBottom: 40,
+  titleSection: {
+    marginBottom: 60,
   },
   title: {
-    fontSize: 36,
+    fontSize: 28,
     fontWeight: "600",
     color: "white",
-    textAlign: "center",
-    lineHeight: 42,
-    letterSpacing: -0.8,
     marginBottom: 12,
   },
   subtitle: {
-    fontSize: 17,
-    color: "rgba(255, 255, 255, 0.6)",
-    textAlign: "center",
-    lineHeight: 24,
-    fontWeight: "400",
-    paddingHorizontal: 20,
+    fontSize: 16,
+    color: "rgba(255, 255, 255, 0.7)",
+    lineHeight: 22,
   },
-  inputContainer: {
-    flex: 1,
+  inputSection: {
+    alignItems: "center",
     paddingTop: 20,
+    marginBottom: 80,
   },
-  phoneInput: {
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 16,
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    fontSize: 17,
+  phoneContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    paddingHorizontal: 10,
+  },
+  digitInput: {
+    width: 30,
+    height: 50,
+    borderWidth: 0,
+    borderBottomWidth: 2,
+    borderBottomColor: "rgba(255, 255, 255, 0.3)",
+    backgroundColor: "transparent",
+    fontSize: 20,
+    fontWeight: "600",
     color: "white",
-    fontWeight: "500",
+    textAlign: "center",
   },
-  buttonContainer: {
-    paddingBottom: 44,
+  digitInputFilled: {
+    borderBottomColor: "white",
   },
-  continueButton: {
+  dash: {
+    fontSize: 20,
+    color: "rgba(255, 255, 255, 0.6)",
+    fontWeight: "600",
+    alignSelf: "center",
+    marginTop: 10,
+  },
+  buttonSection: {
+    paddingBottom: 40,
+  },
+  sendCodeButton: {
     backgroundColor: "white",
-    paddingVertical: 18,
-    borderRadius: 16,
+    paddingVertical: 16,
+    borderRadius: 12,
     alignItems: "center",
   },
-  disabledButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-  },
-  continueButtonText: {
-    fontSize: 17,
+  sendCodeButtonText: {
+    fontSize: 16,
     fontWeight: "600",
     color: "black",
   },
