@@ -10,27 +10,36 @@ export default function CreateAccount({ onSignUp, onLogIn }: CreateAccountProps)
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* Illustration placeholder - you can add the card illustration here */}
-        <View style={styles.illustrationContainer}>
-          <View style={styles.cardStack}>
-            <View style={[styles.card, styles.card1]} />
-            <View style={[styles.card, styles.card2]} />
-            <View style={[styles.card, styles.card3]} />
-            <View style={[styles.card, styles.card4]} />
-          </View>
-          <View style={styles.coins}>
-            <View style={[styles.coin, styles.coin1]} />
-            <View style={[styles.coin, styles.coin2]} />
-            <View style={[styles.coin, styles.coin3]} />
-          </View>
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.backButton} />
+          <View style={styles.forwardButton} />
         </View>
 
-        {/* Text content */}
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>Create your{'\n'}Tangent account</Text>
-          <Text style={styles.description}>
-            Tangent is a powerful tool that allows you to easily send, receive, and track all your transactions.
-          </Text>
+        {/* Main Content */}
+        <View style={styles.mainContent}>
+          {/* Illustration */}
+          <View style={styles.illustrationContainer}>
+            <View style={styles.cardStack}>
+              <View style={[styles.card, styles.card1]} />
+              <View style={[styles.card, styles.card2]} />
+              <View style={[styles.card, styles.card3]} />
+              <View style={[styles.card, styles.card4]} />
+            </View>
+            <View style={styles.coins}>
+              <View style={[styles.coin, styles.coin1]} />
+              <View style={[styles.coin, styles.coin2]} />
+              <View style={[styles.coin, styles.coin3]} />
+            </View>
+          </View>
+
+          {/* Text Content */}
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>Create your{'\n'}Tangent account</Text>
+            <Text style={styles.description}>
+              Tangent is a powerful tool that allows you to easily send, receive, and track all your transactions.
+            </Text>
+          </View>
         </View>
 
         {/* Buttons */}
@@ -56,19 +65,37 @@ export default function CreateAccount({ onSignUp, onLogIn }: CreateAccountProps)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
+    backgroundColor: "#000000",
   },
   content: {
     flex: 1,
     paddingHorizontal: 24,
+  },
+  header: {
+    flexDirection: "row",
     justifyContent: "space-between",
-    paddingTop: 60,
+    alignItems: "center",
+    paddingTop: 16,
+    marginBottom: 40,
+  },
+  backButton: {
+    width: 44,
+    height: 44,
+  },
+  forwardButton: {
+    width: 44,
+    height: 44,
+  },
+  mainContent: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 20,
   },
   illustrationContainer: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     position: "relative",
+    marginBottom: 60,
   },
   cardStack: {
     position: "relative",
@@ -135,13 +162,12 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   title: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: "white",
+    fontSize: 28,
+    fontWeight: "600",
+    color: "#FFFFFF",
     textAlign: "center",
-    lineHeight: 38,
-    letterSpacing: -0.5,
-    marginBottom: 16,
+    lineHeight: 34,
+    marginBottom: 12,
   },
   description: {
     fontSize: 16,
@@ -154,36 +180,41 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   signUpButton: {
-    backgroundColor: "white",
-    paddingVertical: 16,
-    borderRadius: 25,
+    backgroundColor: "#FFFFFF",
+    paddingVertical: 18,
+    borderRadius: 12,
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 16,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
   signUpButtonText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
-    color: "black",
+    color: "#000000",
   },
   logInButton: {
     backgroundColor: "transparent",
-    paddingVertical: 16,
-    borderRadius: 25,
+    paddingVertical: 18,
+    borderRadius: 12,
     alignItems: "center",
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.3)",
-    marginBottom: 20,
+    marginBottom: 24,
   },
   logInButtonText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "600",
-    color: "white",
+    color: "#FFFFFF",
   },
   termsText: {
-    fontSize: 12,
+    fontSize: 14,
     color: "rgba(255, 255, 255, 0.5)",
     textAlign: "center",
-    lineHeight: 16,
+    lineHeight: 20,
   },
   linkText: {
     color: "rgba(255, 255, 255, 0.8)",

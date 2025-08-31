@@ -24,69 +24,72 @@ export default function Email({ onNext, onBack }: EmailProps) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        {onBack && (
-          <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <Text style={styles.backIcon}>←</Text>
-          </TouchableOpacity>
-        )}
-        <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-          <Text style={styles.nextIcon}>→</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Main Content */}
       <View style={styles.content}>
-        <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.subtitle}>
-          Enter your email and password to get started
-        </Text>
-
-        {/* Email Input */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your email"
-            placeholderTextColor="rgba(255, 255, 255, 0.4)"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={onBack}>
+            <Text style={styles.backArrow}>←</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.forwardButton} onPress={handleNext}>
+            <Text style={styles.forwardArrow}>→</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Password Input */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Password</Text>
-          <View style={styles.passwordContainer}>
+        {/* Title and Description */}
+        <View style={styles.titleSection}>
+          <Text style={styles.title}>Create Account</Text>
+          <Text style={styles.subtitle}>
+            Enter your email and password to get started
+          </Text>
+        </View>
+
+        {/* Form Inputs */}
+        <View style={styles.formSection}>
+          {/* Email Input */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
             <TextInput
-              style={styles.passwordInput}
-              placeholder="Enter your password"
+              style={styles.input}
+              placeholder="Enter your email"
               placeholderTextColor="rgba(255, 255, 255, 0.4)"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
             />
-            <TouchableOpacity 
-              style={styles.eyeButton}
-              onPress={() => setShowPassword(!showPassword)}
-            >
-              <Text style={styles.eyeIcon}>
-                {showPassword ? "👁️" : "👁️‍🗨️"}
-              </Text>
-            </TouchableOpacity>
+          </View>
+
+          {/* Password Input */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Password</Text>
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={styles.passwordInput}
+                placeholder="Enter your password"
+                placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+              />
+              <TouchableOpacity 
+                style={styles.eyeButton}
+                onPress={() => setShowPassword(!showPassword)}
+              >
+                <Text style={styles.eyeIcon}>
+                  {showPassword ? "👁️" : "👁️‍🗨️"}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
 
-      {/* Continue Button */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.continueButton} onPress={handleNext}>
-          <Text style={styles.continueText}>Continue</Text>
-        </TouchableOpacity>
+        {/* Continue Button */}
+        <View style={styles.buttonSection}>
+          <TouchableOpacity style={styles.continueButton} onPress={handleNext}>
+            <Text style={styles.continueButtonText}>Continue</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -95,53 +98,62 @@ export default function Email({ onNext, onBack }: EmailProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000000",
+    backgroundColor: "black",
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 24,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
     paddingTop: 16,
-    paddingBottom: 8,
+    marginBottom: 40,
   },
   backButton: {
-    padding: 8,
+    width: 44,
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  nextButton: {
-    padding: 8,
-  },
-  backIcon: {
-    fontSize: 24,
-    color: "#FFFFFF",
+  backArrow: {
+    fontSize: 28,
+    color: "white",
     fontWeight: "300",
   },
-  nextIcon: {
-    fontSize: 24,
-    color: "#FFFFFF",
+  forwardButton: {
+    width: 44,
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  forwardArrow: {
+    fontSize: 28,
+    color: "white",
     fontWeight: "300",
   },
-  content: {
-    flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 32,
+  titleSection: {
+    marginBottom: 60,
   },
   title: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: "#FFFFFF",
+    fontSize: 28,
+    fontWeight: "600",
+    color: "white",
     marginBottom: 12,
-    textAlign: "center",
   },
   subtitle: {
     fontSize: 16,
     color: "rgba(255, 255, 255, 0.7)",
-    marginBottom: 48,
-    textAlign: "center",
-    lineHeight: 24,
+    lineHeight: 22,
+  },
+  formSection: {
+    flex: 1,
+    alignItems: "center",
   },
   inputContainer: {
     marginBottom: 28,
+    width: "100%",
   },
   label: {
     fontSize: 16,
@@ -155,7 +167,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     fontSize: 16,
-    color: "#FFFFFF",
+    color: "white",
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.1)",
   },
@@ -172,7 +184,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     fontSize: 16,
-    color: "#FFFFFF",
+    color: "white",
   },
   eyeButton: {
     padding: 16,
@@ -180,24 +192,18 @@ const styles = StyleSheet.create({
   eyeIcon: {
     fontSize: 20,
   },
-  footer: {
-    paddingHorizontal: 24,
-    paddingBottom: 32,
+  buttonSection: {
+    paddingBottom: 40,
   },
   continueButton: {
-    backgroundColor: "#FFFFFF",
-    paddingVertical: 18,
+    backgroundColor: "white",
+    paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
   },
-  continueText: {
-    fontSize: 18,
+  continueButtonText: {
+    fontSize: 16,
     fontWeight: "600",
-    color: "#000000",
+    color: "black",
   },
 });

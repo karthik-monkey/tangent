@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput } from "react-native";
 
-interface EmailAddressProps {
-  onNext: (email: string) => void;
+interface PhoneProps {
+  onNext: (phoneNumber: string) => void;
   onBack?: () => void;
 }
 
-export default function EmailAddress({ onNext, onBack }: EmailAddressProps) {
-  const [email, setEmail] = useState("");
+export default function Phone({ onNext, onBack }: PhoneProps) {
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleNext = () => {
-    onNext(email || "test@example.com"); // Default for testing
+    onNext(phoneNumber || "+1234567890"); // Default for testing
   };
 
   return (
@@ -28,37 +28,38 @@ export default function EmailAddress({ onNext, onBack }: EmailAddressProps) {
 
         {/* Title and Description */}
         <View style={styles.titleSection}>
-          <Text style={styles.title}>Add your email</Text>
+          <Text style={styles.title}>Add your Phone Number</Text>
           <Text style={styles.subtitle}>
-            This info needs to be accurate with your ID document.
+            We'll send you a verification code to confirm your number
           </Text>
         </View>
 
-        {/* Email Input Section */}
-        <View style={styles.inputSection}>
-          <Text style={styles.inputLabel}>Email</Text>
+        {/* Phone Input Section */}
+        <View style={styles.formSection}>
           <View style={styles.inputContainer}>
-            <Text style={styles.emailIcon}>✉</Text>
-            <TextInput
-              style={styles.emailInput}
-              placeholder="name@example.com"
-              placeholderTextColor="#999999"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoFocus
-            />
+            <Text style={styles.label}>Phone Number</Text>
+            <View style={styles.phoneContainer}>
+              <Text style={styles.phonePrefix}>+1</Text>
+              <View style={styles.phoneDivider} />
+              <TextInput
+                style={styles.phoneInput}
+                placeholder="(555) 123-4567"
+                placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                value={phoneNumber}
+                onChangeText={setPhoneNumber}
+                keyboardType="phone-pad"
+                autoFocus
+              />
+            </View>
           </View>
         </View>
 
         {/* Continue Button */}
         <View style={styles.buttonSection}>
           <TouchableOpacity 
-            style={[styles.continueButton, !email && styles.disabledButton]}
+            style={[styles.continueButton, !phoneNumber && styles.disabledButton]}
             onPress={handleNext}
-            disabled={!email}
+            disabled={!phoneNumber}
           >
             <Text style={styles.continueButtonText}>Continue</Text>
           </TouchableOpacity>
@@ -76,13 +77,12 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 16,
-    justifyContent: "space-between",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingTop: 16,
     marginBottom: 40,
   },
   backButton: {
@@ -108,8 +108,7 @@ const styles = StyleSheet.create({
     fontWeight: "300",
   },
   titleSection: {
-    alignItems: "flex-start",
-    marginBottom: 40,
+    marginBottom: 60,
   },
   title: {
     fontSize: 28,
@@ -122,34 +121,46 @@ const styles = StyleSheet.create({
     color: "rgba(255, 255, 255, 0.7)",
     lineHeight: 22,
   },
-  inputSection: {
+  formSection: {
     flex: 1,
-    paddingTop: 20,
-  },
-  inputLabel: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "white",
-    marginBottom: 8,
+    alignItems: "center",
   },
   inputContainer: {
+    marginBottom: 28,
+    width: "100%",
+  },
+  label: {
+    fontSize: 16,
+    color: "rgba(255, 255, 255, 0.9)",
+    marginBottom: 12,
+    fontWeight: "500",
+  },
+  phoneContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.1)",
+    paddingHorizontal: 20,
   },
-  emailIcon: {
-    fontSize: 18,
-    color: "rgba(255, 255, 255, 0.6)",
+  phonePrefix: {
+    fontSize: 16,
+    color: "rgba(255, 255, 255, 0.8)",
+    fontWeight: "500",
+    marginRight: 8,
+  },
+  phoneDivider: {
+    width: 1,
+    height: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     marginRight: 12,
   },
-  emailInput: {
+  phoneInput: {
     flex: 1,
+    paddingVertical: 16,
     fontSize: 16,
     color: "white",
-    fontWeight: "400",
   },
   buttonSection: {
     paddingBottom: 40,
@@ -157,7 +168,7 @@ const styles = StyleSheet.create({
   continueButton: {
     backgroundColor: "white",
     paddingVertical: 16,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: "center",
   },
   disabledButton: {

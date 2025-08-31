@@ -6,7 +6,7 @@ import CreateAccount from './onboarding/CreateAccount';
 import ConnectWallet from './onboarding/ConnectWallet';
 import PhoneNumber from './onboarding/Email';
 import VerificationCode from './onboarding/VerificationCode';
-import EmailAddress from './onboarding/EmailAddress';
+import EmailAddress from './onboarding/Phone';
 import HomeAddress from './onboarding/HomeAddress';
 import PersonalInfo from './onboarding/PersonalInfo';
 import OnboardingScreen from './onboarding/loginpost';

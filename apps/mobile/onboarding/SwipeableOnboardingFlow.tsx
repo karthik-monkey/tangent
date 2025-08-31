@@ -9,7 +9,7 @@ import CreateAccount from './CreateAccount';
 import ConnectWallet from './ConnectWallet';
 import PhoneNumber from './PhoneNumber';
 import VerificationCode from './VerificationCode';
-import EmailAddress from './EmailAddress';
+import EmailAddress from './Phone';
 import HomeAddress from './HomeAddress';
 import PersonalInfo from './PersonalInfo';
 
