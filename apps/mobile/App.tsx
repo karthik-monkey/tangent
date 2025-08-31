@@ -10,6 +10,7 @@ import EmailAddress from './onboarding/Phone';
 import PhoneVerification from './onboarding/PhoneVerification';
 import HomeAddress from './onboarding/HomeAddress';
 import PersonalInfo from './onboarding/PersonalInfo';
+import KYCVerification from './onboarding/KYCVerification';
 import OnboardingScreen from './onboarding/loginpost';
 
 export default function App() {
@@ -56,6 +57,10 @@ export default function App() {
   };
 
   const handlePersonalInfoNext = (personalInfo: any) => {
+    setCurrentScreen('kycVerification');
+  };
+
+  const handleKYCNext = () => {
     setCurrentScreen('connectWallet');
   };
 
@@ -73,6 +78,9 @@ export default function App() {
     // Simple back navigation logic
     switch (currentScreen) {
       case 'connectWallet':
+        setCurrentScreen('kycVerification');
+        break;
+      case 'kycVerification':
         setCurrentScreen('personalInfo');
         break;
       case 'personalInfo':
@@ -119,6 +127,8 @@ export default function App() {
       case 'personalInfo':
         console.log('Rendering PersonalInfo screen');
         return <PersonalInfo onNext={handlePersonalInfoNext} onBack={handleBack} />;
+      case 'kycVerification':
+        return <KYCVerification onNext={handleKYCNext} onBack={handleBack} />;
       case 'connectWallet':
         return <ConnectWallet onProceed={handleProceed} onSkip={handleSkip} onBack={handleBack} />;
       case 'login':
