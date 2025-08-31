@@ -13,6 +13,7 @@ import PersonalInfo from './onboarding/PersonalInfo';
 import KYCVerification from './onboarding/KYCVerification';
 import PinSetup from './onboarding/PinSetup';
 import PinConfirm from './onboarding/PinConfirm';
+import WelcomeScreen from './onboarding/WelcomeScreen';
 import OnboardingScreen from './onboarding/loginpost';
 
 export default function App() {
@@ -77,6 +78,15 @@ export default function App() {
     setCurrentScreen('connectWallet');
   };
 
+  const handleWalletProceed = () => {
+    setCurrentScreen('welcome');
+  };
+
+  const handleWelcomeContinue = () => {
+    // This would typically navigate to the main app
+    console.log('Onboarding complete!');
+  };
+
   const handleProceed = () => {
     // Handle proceed with selected wallet
     console.log('Proceed with wallet');
@@ -90,6 +100,9 @@ export default function App() {
   const handleBack = () => {
     // Simple back navigation logic
     switch (currentScreen) {
+      case 'welcome':
+        setCurrentScreen('connectWallet');
+        break;
       case 'connectWallet':
         setCurrentScreen('pinConfirm');
         break;
@@ -152,8 +165,10 @@ export default function App() {
         return <PinSetup onNext={handlePinSetupNext} onBack={handleBack} />;
       case 'pinConfirm':
         return <PinConfirm onNext={handlePinConfirmNext} onBack={handleBack} originalPin={userPin} />;
+      case 'welcome':
+        return <WelcomeScreen onContinue={handleWelcomeContinue} />;
       case 'connectWallet':
-        return <ConnectWallet onProceed={handleProceed} onSkip={handleSkip} onBack={handleBack} />;
+        return <ConnectWallet onProceed={handleWalletProceed} onSkip={handleSkip} onBack={handleBack} />;
       case 'login':
         return <OnboardingScreen />;
       default:
