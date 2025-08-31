@@ -4,10 +4,10 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput } fro
 interface VerificationCodeProps {
   onNext: (code: string) => void;
   onBack?: () => void;
-  phoneNumber?: string;
+  email?: string;
 }
 
-export default function VerificationCode({ onNext, onBack, phoneNumber }: VerificationCodeProps) {
+export default function VerificationCode({ onNext, onBack, email }: VerificationCodeProps) {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<(TextInput | null)[]>([]);
 
@@ -52,9 +52,9 @@ export default function VerificationCode({ onNext, onBack, phoneNumber }: Verifi
 
         {/* Title and Description */}
         <View style={styles.titleSection}>
-          <Text style={styles.title}>Confirm your phone</Text>
+          <Text style={styles.title}>Confirm your email</Text>
           <Text style={styles.subtitle}>
-            We send 6 digits code to {phoneNumber || "+881 1720 84 57 57"}
+            We sent a 6-digit code to {email || "your email address"}
           </Text>
         </View>
 
@@ -94,7 +94,7 @@ export default function VerificationCode({ onNext, onBack, phoneNumber }: Verifi
         {/* Verify Button */}
         <View style={styles.buttonSection}>
           <TouchableOpacity style={styles.verifyButton} onPress={handleNext}>
-            <Text style={styles.verifyButtonText}>Verify Your Number</Text>
+            <Text style={styles.verifyButtonText}>Verify Your Email</Text>
           </TouchableOpacity>
         </View>
       </View>

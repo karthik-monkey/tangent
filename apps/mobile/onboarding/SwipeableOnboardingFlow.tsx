@@ -144,7 +144,7 @@ export default function SwipeableOnboardingFlow({ onFinish }: SwipeableOnboardin
             <VerificationCode 
               onNext={handleVerificationNext} 
               onBack={() => handleBack(screenName)} 
-              phoneNumber={userPhoneNumber} 
+              email={userPhoneNumber} 
             />
           </View>
         );

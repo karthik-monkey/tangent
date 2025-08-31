@@ -8,18 +8,18 @@ import {
   TextInput 
 } from "react-native";
 
-interface PhoneNumberProps {
+interface EmailProps {
   onNext: (email: string) => void;
   onBack?: () => void;
 }
 
-export default function PhoneNumber({ onNext, onBack }: PhoneNumberProps) {
+export default function Email({ onNext, onBack }: EmailProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleNext = () => {
-    onNext(email || "test@example.com"); // Default for testing
+    onNext(email || "test@example.com");
   };
 
   return (
@@ -27,28 +27,28 @@ export default function PhoneNumber({ onNext, onBack }: PhoneNumberProps) {
       {/* Header */}
       <View style={styles.header}>
         {onBack && (
-          <TouchableOpacity style={styles.iconButton} onPress={onBack}>
-            <Text style={styles.icon}>←</Text>
+          <TouchableOpacity style={styles.backButton} onPress={onBack}>
+            <Text style={styles.backIcon}>←</Text>
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={styles.iconButton} onPress={handleNext}>
-          <Text style={styles.icon}>→</Text>
+        <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+          <Text style={styles.nextIcon}>→</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Content */}
+      {/* Main Content */}
       <View style={styles.content}>
-        <Text style={styles.title}>Create an Account</Text>
+        <Text style={styles.title}>Create Account</Text>
         <Text style={styles.subtitle}>
-          Enter your email address to verify your account
+          Enter your email and password to get started
         </Text>
 
-        {/* Email */}
-        <View style={styles.inputWrapper}>
+        {/* Email Input */}
+        <View style={styles.inputContainer}>
           <Text style={styles.label}>Email</Text>
           <TextInput
             style={styles.input}
-            placeholder="name@example.com"
+            placeholder="Enter your email"
             placeholderTextColor="rgba(255, 255, 255, 0.4)"
             value={email}
             onChangeText={setEmail}
@@ -58,29 +58,34 @@ export default function PhoneNumber({ onNext, onBack }: PhoneNumberProps) {
           />
         </View>
 
-        {/* Password */}
-        <View style={styles.inputWrapper}>
+        {/* Password Input */}
+        <View style={styles.inputContainer}>
           <Text style={styles.label}>Password</Text>
-          <View style={styles.passwordRow}>
+          <View style={styles.passwordContainer}>
             <TextInput
-              style={styles.input}
-              placeholder="••••••••"
+              style={styles.passwordInput}
+              placeholder="Enter your password"
               placeholderTextColor="rgba(255, 255, 255, 0.4)"
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
             />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              <Text style={styles.eye}>{showPassword ? "👁️" : "👁️‍🗨️"}</Text>
+            <TouchableOpacity 
+              style={styles.eyeButton}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Text style={styles.eyeIcon}>
+                {showPassword ? "👁️" : "👁️‍🗨️"}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
 
-      {/* Footer Button */}
+      {/* Continue Button */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.button} onPress={handleNext}>
-          <Text style={styles.buttonText}>Continue</Text>
+        <TouchableOpacity style={styles.continueButton} onPress={handleNext}>
+          <Text style={styles.continueText}>Continue</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -90,78 +95,109 @@ export default function PhoneNumber({ onNext, onBack }: PhoneNumberProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
+    backgroundColor: "#000000",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingTop: 8,
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 8,
   },
-  iconButton: {
+  backButton: {
     padding: 8,
   },
-  icon: {
+  nextButton: {
+    padding: 8,
+  },
+  backIcon: {
     fontSize: 24,
-    color: "white",
+    color: "#FFFFFF",
+    fontWeight: "300",
+  },
+  nextIcon: {
+    fontSize: 24,
+    color: "#FFFFFF",
+    fontWeight: "300",
   },
   content: {
     flex: 1,
     paddingHorizontal: 24,
-    justifyContent: "flex-start",
-    paddingTop: 40,
+    paddingTop: 32,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "600",
-    color: "white",
-    marginBottom: 6,
+    fontSize: 32,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    marginBottom: 12,
+    textAlign: "center",
   },
   subtitle: {
-    fontSize: 15,
-    color: "rgba(255, 255, 255, 0.6)",
-    marginBottom: 24,
-    lineHeight: 22,
+    fontSize: 16,
+    color: "rgba(255, 255, 255, 0.7)",
+    marginBottom: 48,
+    textAlign: "center",
+    lineHeight: 24,
   },
-  inputWrapper: {
-    marginBottom: 20,
+  inputContainer: {
+    marginBottom: 28,
   },
   label: {
-    fontSize: 14,
-    color: "rgba(255, 255, 255, 0.7)",
-    marginBottom: 6,
+    fontSize: 16,
+    color: "rgba(255, 255, 255, 0.9)",
+    marginBottom: 12,
+    fontWeight: "500",
   },
   input: {
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
-    borderRadius: 8,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     fontSize: 16,
-    color: "white",
+    color: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.1)",
   },
-  passwordRow: {
+  passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
-    borderRadius: 8,
-    paddingHorizontal: 12,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.1)",
   },
-  eye: {
-    fontSize: 18,
-    marginLeft: 8,
+  passwordInput: {
+    flex: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    fontSize: 16,
+    color: "#FFFFFF",
+  },
+  eyeButton: {
+    padding: 16,
+  },
+  eyeIcon: {
+    fontSize: 20,
   },
   footer: {
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingBottom: 32,
   },
-  button: {
-    backgroundColor: "white",
-    paddingVertical: 16,
-    borderRadius: 10,
+  continueButton: {
+    backgroundColor: "#FFFFFF",
+    paddingVertical: 18,
+    borderRadius: 12,
     alignItems: "center",
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  buttonText: {
-    fontSize: 16,
+  continueText: {
+    fontSize: 18,
     fontWeight: "600",
-    color: "black",
+    color: "#000000",
   },
 });

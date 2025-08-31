@@ -100,7 +100,7 @@ export default function App() {
       case 'phoneNumber':
         return <PhoneNumber onNext={handlePhoneNext} onBack={handleBack} />;
       case 'verificationCode':
-        return <VerificationCode onNext={handleVerificationNext} onBack={handleBack} phoneNumber={userPhoneNumber} />;
+        return <VerificationCode onNext={handleVerificationNext} onBack={handleBack} />;
       case 'emailAddress':
         return <EmailAddress onNext={handleEmailNext} onBack={handleBack} />;
       case 'homeAddress':
