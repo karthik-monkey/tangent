@@ -7,6 +7,7 @@ interface HomeAddressProps {
     city: string;
     state: string;
     zipCode: string;
+    country: string;
   }) => void;
   onBack?: () => void;
 }
@@ -16,13 +17,15 @@ export default function HomeAddress({ onNext, onBack }: HomeAddressProps) {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
+  const [country, setCountry] = useState("United States");
 
   const handleNext = () => {
     onNext({ 
       street: street || "123 Main St", 
       city: city || "Anytown", 
       state: state || "CA", 
-      zipCode: zipCode || "12345" 
+      zipCode: zipCode || "12345",
+      country: country || "United States"
     }); // Default for testing
   };
 
@@ -40,44 +43,43 @@ export default function HomeAddress({ onNext, onBack }: HomeAddressProps) {
         </View>
 
         {/* Title and Description */}
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>Home Address</Text>
+        <View style={styles.titleSection}>
+          <Text style={styles.title}>Home address</Text>
           <Text style={styles.subtitle}>
-            Please provide your home address for verification
+            This info needs to be accurate with your ID document.
           </Text>
         </View>
 
         {/* Address Inputs */}
-        <ScrollView style={styles.inputContainer} showsVerticalScrollIndicator={false}>
-          <TextInput
-            style={styles.input}
-            placeholder="Street Address"
-            placeholderTextColor="rgba(255, 255, 255, 0.5)"
-            value={street}
-            onChangeText={setStreet}
-            autoFocus
-          />
-          
-          <TextInput
-            style={styles.input}
-            placeholder="City"
-            placeholderTextColor="rgba(255, 255, 255, 0.5)"
-            value={city}
-            onChangeText={setCity}
-          />
-          
-          <View style={styles.rowContainer}>
+        <ScrollView style={styles.inputSection} showsVerticalScrollIndicator={false}>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>Address Line</Text>
             <TextInput
-              style={[styles.input, styles.halfInput]}
-              placeholder="State"
+              style={styles.input}
+              placeholder="Mr. Jhon Doe"
               placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              value={state}
-              onChangeText={setState}
+              value={street}
+              onChangeText={setStreet}
+              autoFocus
             />
-            
+          </View>
+          
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>City</Text>
             <TextInput
-              style={[styles.input, styles.halfInput]}
-              placeholder="ZIP Code"
+              style={styles.input}
+              placeholder="City, State"
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              value={city}
+              onChangeText={setCity}
+            />
+          </View>
+          
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>Postcode</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ex: 00000"
               placeholderTextColor="rgba(255, 255, 255, 0.5)"
               value={zipCode}
               onChangeText={setZipCode}
@@ -85,15 +87,29 @@ export default function HomeAddress({ onNext, onBack }: HomeAddressProps) {
               maxLength={10}
             />
           </View>
+
+          <View style={styles.fieldContainer}>
+            <Text style={styles.fieldLabel}>Country of Residence</Text>
+            <View style={styles.countryContainer}>
+              <Text style={styles.flagIcon}>🇺🇸</Text>
+              <TextInput
+                style={styles.countryInput}
+                placeholder="United States"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                value={country}
+                onChangeText={setCountry}
+              />
+            </View>
+          </View>
         </ScrollView>
 
-        {/* Next Button */}
-        <View style={styles.buttonContainer}>
+        {/* Continue Button */}
+        <View style={styles.buttonSection}>
           <TouchableOpacity 
             style={styles.continueButton}
             onPress={handleNext}
           >
-            <Text style={styles.continueButtonText}>Next</Text>
+            <Text style={styles.continueButtonText}>Continue</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -108,15 +124,15 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 32,
-    justifyContent: "space-between",
+    paddingHorizontal: 24,
     paddingTop: 16,
+    justifyContent: "space-between",
   },
   header: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 32,
+    alignItems: "center",
+    marginBottom: 40,
   },
   backButton: {
     width: 44,
@@ -140,65 +156,72 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "300",
   },
-  textContainer: {
-    alignItems: "center",
+  titleSection: {
+    alignItems: "flex-start",
     marginBottom: 40,
   },
   title: {
-    fontSize: 36,
+    fontSize: 28,
     fontWeight: "600",
     color: "white",
-    textAlign: "center",
-    lineHeight: 42,
-    letterSpacing: -0.8,
     marginBottom: 12,
   },
   subtitle: {
-    fontSize: 17,
-    color: "rgba(255, 255, 255, 0.6)",
-    textAlign: "center",
-    lineHeight: 24,
-    fontWeight: "400",
-    paddingHorizontal: 20,
+    fontSize: 16,
+    color: "rgba(255, 255, 255, 0.7)",
+    lineHeight: 22,
   },
-  inputContainer: {
+  inputSection: {
     flex: 1,
     paddingTop: 20,
+  },
+  fieldContainer: {
+    marginBottom: 24,
+  },
+  fieldLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "white",
+    marginBottom: 8,
   },
   input: {
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 16,
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    fontSize: 17,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    fontSize: 16,
     color: "white",
-    fontWeight: "500",
-    marginBottom: 16,
+    fontWeight: "400",
   },
-  rowContainer: {
+  countryContainer: {
     flexDirection: "row",
-    gap: 12,
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
   },
-  halfInput: {
+  flagIcon: {
+    fontSize: 18,
+    marginRight: 12,
+  },
+  countryInput: {
     flex: 1,
+    fontSize: 16,
+    color: "white",
+    fontWeight: "400",
   },
-  buttonContainer: {
-    paddingBottom: 44,
-    paddingTop: 20,
+  buttonSection: {
+    paddingBottom: 40,
   },
   continueButton: {
     backgroundColor: "white",
-    paddingVertical: 18,
-    borderRadius: 16,
+    paddingVertical: 16,
+    borderRadius: 8,
     alignItems: "center",
   },
-  disabledButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-  },
   continueButtonText: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "600",
     color: "black",
   },

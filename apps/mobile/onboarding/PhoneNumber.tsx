@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput } from "react-native";
 
 interface PhoneNumberProps {
@@ -7,30 +7,12 @@ interface PhoneNumberProps {
 }
 
 export default function PhoneNumber({ onNext, onBack }: PhoneNumberProps) {
-  const [phoneDigits, setPhoneDigits] = useState(["", "", "", "", "", "", "", "", "", ""]);
-  const inputRefs = useRef<(TextInput | null)[]>([]);
-  const placeholderNumbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleNext = () => {
-    const phoneNumber = phoneDigits.join("");
     onNext(phoneNumber || "1234567890"); // Default for testing
-  };
-
-  const handleDigitChange = (text: string, index: number) => {
-    const newDigits = [...phoneDigits];
-    newDigits[index] = text;
-    setPhoneDigits(newDigits);
-
-    // Auto-focus next input
-    if (text && index < 9) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyPress = (key: string, index: number) => {
-    if (key === 'Backspace' && !phoneDigits[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
   };
 
   return (
@@ -48,50 +30,60 @@ export default function PhoneNumber({ onNext, onBack }: PhoneNumberProps) {
 
         {/* Title and Description */}
         <View style={styles.titleSection}>
-          <Text style={styles.title}>Enter your phone number</Text>
+          <Text style={styles.title}>Create an Account</Text>
           <Text style={styles.subtitle}>
-            We'll send you a verification code to confirm your number
+            Enter your mobile number to verify your account
           </Text>
         </View>
 
         {/* Phone Number Input Section */}
         <View style={styles.inputSection}>
+          <Text style={styles.inputLabel}>Phone</Text>
           <View style={styles.phoneContainer}>
-            {phoneDigits.map((digit, index) => (
-              <React.Fragment key={index}>
-                <TextInput
-                  ref={(ref) => {
-                    inputRefs.current[index] = ref;
-                  }}
-                  style={[
-                    styles.digitInput,
-                    digit ? styles.digitInputFilled : null
-                  ]}
-                  value={digit}
-                  placeholder={placeholderNumbers[index]}
-                  placeholderTextColor="rgba(255, 255, 255, 0.3)"
-                  onChangeText={(text) => handleDigitChange(text, index)}
-                  onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}
-                  maxLength={1}
-                  keyboardType="number-pad"
-                  textAlign="center"
-                  autoFocus={index === 0}
-                />
-                {(index === 2 || index === 5) && (
-                  <Text style={styles.dash}>-</Text>
-                )}
-              </React.Fragment>
-            ))}
+            <View style={styles.countryCodeContainer}>
+              <View style={styles.flagContainer}>
+                <Text style={styles.flag}>🇺🇸</Text>
+              </View>
+              <Text style={styles.countryCode}>+1</Text>
+            </View>
+            <TextInput
+              style={styles.phoneInput}
+              placeholder="(555) 123-4567"
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              keyboardType="phone-pad"
+              autoFocus
+            />
+          </View>
+
+          <Text style={styles.inputLabel}>Password</Text>
+          <View style={styles.passwordContainer}>
+            <Text style={styles.lockIcon}>🔒</Text>
+            <TextInput
+              style={styles.passwordInput}
+              placeholder="••••••••"
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity 
+              style={styles.eyeIcon}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Text style={styles.eyeText}>{showPassword ? "👁️" : "👁️‍🗨️"}</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
-        {/* Send Code Button */}
+        {/* Continue Button */}
         <View style={styles.buttonSection}>
           <TouchableOpacity 
-            style={styles.sendCodeButton}
+            style={styles.continueButton}
             onPress={handleNext}
           >
-            <Text style={styles.sendCodeButtonText}>Send Code</Text>
+            <Text style={styles.continueButtonText}>Continue</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -107,12 +99,13 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 24,
+    paddingTop: 16,
+    justifyContent: "space-between",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: 16,
     marginBottom: 40,
   },
   backButton: {
@@ -138,7 +131,8 @@ const styles = StyleSheet.create({
     fontWeight: "300",
   },
   titleSection: {
-    marginBottom: 60,
+    alignItems: "flex-start",
+    marginBottom: 40,
   },
   title: {
     fontSize: 28,
@@ -152,48 +146,90 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   inputSection: {
-    alignItems: "center",
+    flex: 1,
     paddingTop: 20,
-    marginBottom: 80,
+  },
+  inputLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "white",
+    marginBottom: 8,
+    marginTop: 16,
   },
   phoneContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    paddingHorizontal: 10,
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    marginBottom: 16,
   },
-  digitInput: {
-    width: 30,
-    height: 50,
-    borderWidth: 0,
-    borderBottomWidth: 2,
-    borderBottomColor: "rgba(255, 255, 255, 0.3)",
-    backgroundColor: "transparent",
-    fontSize: 20,
-    fontWeight: "600",
+  countryCodeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 12,
+    paddingRight: 12,
+    borderRightWidth: 1,
+    borderRightColor: "rgba(255, 255, 255, 0.2)",
+  },
+  flagContainer: {
+    width: 24,
+    height: 16,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 4,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 8,
+  },
+  flag: {
+    fontSize: 12,
+  },
+  countryCode: {
+    fontSize: 16,
     color: "white",
-    textAlign: "center",
+    fontWeight: "500",
   },
-  digitInputFilled: {
-    borderBottomColor: "white",
+  phoneInput: {
+    flex: 1,
+    fontSize: 16,
+    color: "white",
+    fontWeight: "400",
   },
-  dash: {
-    fontSize: 20,
-    color: "rgba(255, 255, 255, 0.6)",
-    fontWeight: "600",
-    alignSelf: "center",
-    marginTop: 10,
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+  },
+  lockIcon: {
+    fontSize: 16,
+    marginRight: 12,
+  },
+  passwordInput: {
+    flex: 1,
+    fontSize: 16,
+    color: "white",
+    fontWeight: "400",
+  },
+  eyeIcon: {
+    padding: 4,
+  },
+  eyeText: {
+    fontSize: 16,
   },
   buttonSection: {
     paddingBottom: 40,
   },
-  sendCodeButton: {
+  continueButton: {
     backgroundColor: "white",
     paddingVertical: 16,
-    borderRadius: 12,
+    borderRadius: 8,
     alignItems: "center",
   },
-  sendCodeButtonText: {
+  continueButtonText: {
     fontSize: 16,
     fontWeight: "600",
     color: "black",

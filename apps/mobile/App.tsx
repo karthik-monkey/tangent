@@ -8,6 +8,7 @@ import PhoneNumber from './onboarding/PhoneNumber';
 import VerificationCode from './onboarding/VerificationCode';
 import EmailAddress from './onboarding/EmailAddress';
 import HomeAddress from './onboarding/HomeAddress';
+import PersonalInfo from './onboarding/PersonalInfo';
 import OnboardingScreen from './onboarding/loginpost';
 
 export default function App() {
@@ -44,6 +45,11 @@ export default function App() {
   };
 
   const handleAddressNext = (address: any) => {
+    console.log('Navigating to personalInfo screen');
+    setCurrentScreen('personalInfo');
+  };
+
+  const handlePersonalInfoNext = (personalInfo: any) => {
     setCurrentScreen('connectWallet');
   };
 
@@ -61,6 +67,9 @@ export default function App() {
     // Simple back navigation logic
     switch (currentScreen) {
       case 'connectWallet':
+        setCurrentScreen('personalInfo');
+        break;
+      case 'personalInfo':
         setCurrentScreen('homeAddress');
         break;
       case 'homeAddress':
@@ -96,6 +105,9 @@ export default function App() {
         return <EmailAddress onNext={handleEmailNext} onBack={handleBack} />;
       case 'homeAddress':
         return <HomeAddress onNext={handleAddressNext} onBack={handleBack} />;
+      case 'personalInfo':
+        console.log('Rendering PersonalInfo screen');
+        return <PersonalInfo onNext={handlePersonalInfoNext} onBack={handleBack} />;
       case 'connectWallet':
         return <ConnectWallet onProceed={handleProceed} onSkip={handleSkip} onBack={handleBack} />;
       case 'login':

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput } from "react-native";
 
 interface VerificationCodeProps {
@@ -8,15 +8,33 @@ interface VerificationCodeProps {
 }
 
 export default function VerificationCode({ onNext, onBack, phoneNumber }: VerificationCodeProps) {
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const inputRefs = useRef<(TextInput | null)[]>([]);
 
   const handleNext = () => {
-    onNext(code || "123456"); // Default for testing
+    const fullCode = code.join("");
+    onNext(fullCode || "123456"); // Default for testing
   };
 
   const handleResend = () => {
-    // Handle resend code
     console.log("Resend verification code");
+  };
+
+  const handleCodeChange = (text: string, index: number) => {
+    const newCode = [...code];
+    newCode[index] = text;
+    setCode(newCode);
+
+    // Auto-focus next input
+    if (text && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyPress = (key: string, index: number) => {
+    if (key === 'Backspace' && !code[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
   };
 
   return (
@@ -33,53 +51,50 @@ export default function VerificationCode({ onNext, onBack, phoneNumber }: Verifi
         </View>
 
         {/* Title and Description */}
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>Enter Verification Code</Text>
+        <View style={styles.titleSection}>
+          <Text style={styles.title}>Confirm your phone</Text>
           <Text style={styles.subtitle}>
-            We sent a 6-digit code to{'\n'}{phoneNumber || "your phone number"}
+            We send 6 digits code to {phoneNumber || "+881 1720 84 57 57"}
           </Text>
         </View>
 
-        {/* Code Input */}
-        <View style={styles.inputContainer}>
-          <View style={styles.codeInputContainer}>
-            {[0, 1, 2, 3, 4, 5].map((index) => (
-              <View key={index} style={styles.digitBox}>
-                <Text style={styles.digitText}>
-                  {code[index] || ''}
-                </Text>
-              </View>
+        {/* Code Input Boxes */}
+        <View style={styles.codeSection}>
+          <View style={styles.codeContainer}>
+            {code.map((digit, index) => (
+              <TextInput
+                key={index}
+                ref={(ref) => {
+                  inputRefs.current[index] = ref;
+                }}
+                style={[
+                  styles.digitInput,
+                  digit ? styles.digitInputFilled : null
+                ]}
+                value={digit}
+                onChangeText={(text) => handleCodeChange(text, index)}
+                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}
+                maxLength={1}
+                keyboardType="number-pad"
+                textAlign="center"
+                autoFocus={index === 0}
+              />
             ))}
           </View>
-          
-          <TextInput
-            style={styles.hiddenInput}
-            value={code}
-            onChangeText={setCode}
-            keyboardType="number-pad"
-            maxLength={6}
-            autoFocus
-          />
-          
-          {/* Resend Options */}
+
+          {/* Resend Option */}
           <View style={styles.resendSection}>
-            <Text style={styles.resendText}>Didn't get the code?</Text>
-            <TouchableOpacity style={styles.resendButton} onPress={handleResend}>
-              <Text style={styles.resendLink}>Resend Code</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.resendButton}>
-              <Text style={styles.resendLink}>Call Me Instead</Text>
+            <Text style={styles.resendText}>Didn't get a code? </Text>
+            <TouchableOpacity onPress={handleResend}>
+              <Text style={styles.resendLink}>Resend</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Next Button */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity 
-            style={styles.continueButton}
-            onPress={handleNext}
-          >
-            <Text style={styles.continueButtonText}>Next</Text>
+        {/* Verify Button */}
+        <View style={styles.buttonSection}>
+          <TouchableOpacity style={styles.verifyButton} onPress={handleNext}>
+            <Text style={styles.verifyButtonText}>Verify Your Number</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -94,15 +109,14 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 32,
-    justifyContent: "space-between",
-    paddingTop: 16,
+    paddingHorizontal: 24,
   },
   header: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 32,
+    alignItems: "center",
+    paddingTop: 16,
+    marginBottom: 40,
   },
   backButton: {
     width: 44,
@@ -126,90 +140,71 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "300",
   },
-  textContainer: {
-    alignItems: "center",
-    marginBottom: 40,
+  titleSection: {
+    marginBottom: 60,
   },
   title: {
-    fontSize: 36,
+    fontSize: 28,
     fontWeight: "600",
     color: "white",
-    textAlign: "center",
-    lineHeight: 42,
-    letterSpacing: -0.8,
     marginBottom: 12,
   },
   subtitle: {
-    fontSize: 17,
-    color: "rgba(255, 255, 255, 0.6)",
-    textAlign: "center",
-    lineHeight: 24,
-    fontWeight: "400",
+    fontSize: 16,
+    color: "rgba(255, 255, 255, 0.7)",
+    lineHeight: 22,
+  },
+  codeSection: {
+    flex: 1,
+    alignItems: "center",
+  },
+  codeContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 40,
     paddingHorizontal: 20,
   },
-  inputContainer: {
-    flex: 1,
-    paddingTop: 20,
-    alignItems: "center",
-  },
-  codeInputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "80%",
-    marginBottom: 20,
-  },
-  digitBox: {
-    width: 60,
-    height: 60,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
-  },
-  digitText: {
+  digitInput: {
+    width: 45,
+    height: 55,
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.3)",
+    borderRadius: 8,
+    backgroundColor: "transparent",
     fontSize: 24,
     fontWeight: "600",
     color: "white",
-    letterSpacing: 8,
+    textAlign: "center",
   },
-  hiddenInput: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: 0,
-    height: 0,
-    opacity: 0,
+  digitInputFilled: {
+    borderColor: "white",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
   },
   resendSection: {
+    flexDirection: "row",
     alignItems: "center",
-    marginTop: 32,
   },
   resendText: {
-    fontSize: 15,
-    color: "rgba(255, 255, 255, 0.6)",
-    marginBottom: 16,
-  },
-  resendButton: {
-    marginBottom: 12,
+    fontSize: 16,
+    color: "rgba(255, 255, 255, 0.7)",
   },
   resendLink: {
-    fontSize: 15,
+    fontSize: 16,
     color: "white",
     fontWeight: "500",
   },
-  buttonContainer: {
-    paddingBottom: 44,
+  buttonSection: {
+    paddingBottom: 40,
   },
-  continueButton: {
+  verifyButton: {
     backgroundColor: "white",
-    paddingVertical: 18,
-    borderRadius: 16,
+    paddingVertical: 16,
+    borderRadius: 12,
     alignItems: "center",
   },
-  continueButtonText: {
-    fontSize: 17,
+  verifyButtonText: {
+    fontSize: 16,
     fontWeight: "600",
     color: "black",
   },
