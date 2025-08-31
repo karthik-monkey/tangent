@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput, KeyboardAvoidingView, ScrollView, Platform } from "react-native";
 
 interface VerificationCodeProps {
   onNext: (code: string) => void;
@@ -39,65 +39,78 @@ export default function VerificationCode({ onNext, onBack, email }: Verification
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <Text style={styles.backArrow}>←</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.forwardButton} onPress={handleNext}>
-            <Text style={styles.forwardArrow}>→</Text>
-          </TouchableOpacity>
-        </View>
+      <KeyboardAvoidingView 
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+      >
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.content}>
+            {/* Header */}
+            <View style={styles.header}>
+              <TouchableOpacity style={styles.backButton} onPress={onBack}>
+                <Text style={styles.backArrow}>←</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.forwardButton} onPress={handleNext}>
+                <Text style={styles.forwardArrow}>→</Text>
+              </TouchableOpacity>
+            </View>
 
-        {/* Title and Description */}
-        <View style={styles.titleSection}>
-          <Text style={styles.title}>Confirm your email</Text>
-          <Text style={styles.subtitle}>
-            We sent a 6-digit code to {email || "your email address"}
-          </Text>
-        </View>
+            {/* Title and Description */}
+            <View style={styles.titleSection}>
+              <Text style={styles.title}>Confirm your email</Text>
+              <Text style={styles.subtitle}>
+                We sent a 6-digit code to {email || "your email address"}
+              </Text>
+            </View>
 
-        {/* Code Input Boxes */}
-        <View style={styles.codeSection}>
-          <View style={styles.codeContainer}>
-            {code.map((digit, index) => (
-              <TextInput
-                key={index}
-                ref={(ref) => {
-                  inputRefs.current[index] = ref;
-                }}
-                style={[
-                  styles.digitInput,
-                  digit ? styles.digitInputFilled : null
-                ]}
-                value={digit}
-                onChangeText={(text) => handleCodeChange(text, index)}
-                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}
-                maxLength={1}
-                keyboardType="number-pad"
-                textAlign="center"
-                autoFocus={index === 0}
-              />
-            ))}
+            {/* Code Input Boxes */}
+            <View style={styles.codeSection}>
+              <View style={styles.codeContainer}>
+                {code.map((digit, index) => (
+                  <TextInput
+                    key={index}
+                    ref={(ref) => {
+                      inputRefs.current[index] = ref;
+                    }}
+                    style={[
+                      styles.digitInput,
+                      digit ? styles.digitInputFilled : null
+                    ]}
+                    value={digit}
+                    onChangeText={(text) => handleCodeChange(text, index)}
+                    onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}
+                    maxLength={1}
+                    keyboardType="number-pad"
+                    textAlign="center"
+                    autoFocus={index === 0}
+                  />
+                ))}
+              </View>
+
+              {/* Resend Option */}
+              <View style={styles.resendSection}>
+                <Text style={styles.resendText}>Didn't get a code? </Text>
+                <TouchableOpacity onPress={handleResend}>
+                  <Text style={styles.resendLink}>Resend</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Verify Button */}
+            <View style={styles.buttonSection}>
+              <TouchableOpacity style={styles.verifyButton} onPress={handleNext}>
+                <Text style={styles.verifyButtonText}>Verify Your Email</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
-          {/* Resend Option */}
-          <View style={styles.resendSection}>
-            <Text style={styles.resendText}>Didn't get a code? </Text>
-            <TouchableOpacity onPress={handleResend}>
-              <Text style={styles.resendLink}>Resend</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Verify Button */}
-        <View style={styles.buttonSection}>
-          <TouchableOpacity style={styles.verifyButton} onPress={handleNext}>
-            <Text style={styles.verifyButtonText}>Verify Your Email</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -106,6 +119,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "black",
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   content: {
     flex: 1,

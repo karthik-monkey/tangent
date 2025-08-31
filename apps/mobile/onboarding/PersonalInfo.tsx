@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput, ScrollView, Modal } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput, ScrollView, Modal, KeyboardAvoidingView, Platform } from "react-native";
 
 interface PersonalInfoProps {
   onNext: (personalInfo: {
@@ -132,7 +132,11 @@ export default function PersonalInfo({ onNext, onBack }: PersonalInfoProps) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <KeyboardAvoidingView 
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+      >
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={onBack}>
@@ -143,67 +147,75 @@ export default function PersonalInfo({ onNext, onBack }: PersonalInfoProps) {
           </TouchableOpacity>
         </View>
 
-        {/* Title and Description */}
-        <View style={styles.titleSection}>
-          <Text style={styles.title}>Add your personal info</Text>
-          <Text style={styles.subtitle}>
-            This info needs to be accurate with your ID document.
-          </Text>
-        </View>
-
-        {/* Personal Info Inputs */}
-        <ScrollView style={styles.inputSection} showsVerticalScrollIndicator={false}>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Full Name</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Mr. Jhon Doe"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              value={fullName}
-              onChangeText={setFullName}
-              autoFocus
-            />
+        {/* Scrollable Content */}
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Title and Description */}
+          <View style={styles.titleSection}>
+            <Text style={styles.title}>Add your personal info</Text>
+            <Text style={styles.subtitle}>
+              This info needs to be accurate with your ID document.
+            </Text>
           </View>
-          
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Username</Text>
-            <View style={styles.usernameContainer}>
-              <Text style={styles.usernamePrefix}>@</Text>
+
+          {/* Personal Info Inputs */}
+          <View style={styles.inputSection}>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Full Name</Text>
               <TextInput
-                style={styles.usernameInput}
-                placeholder="username"
+                style={styles.input}
+                placeholder="Mr. Jhon Doe"
                 placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                value={username}
-                onChangeText={setUsername}
-                autoCapitalize="none"
-                autoCorrect={false}
+                value={fullName}
+                onChangeText={setFullName}
+                autoFocus
               />
             </View>
+            
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Username</Text>
+              <View style={styles.usernameContainer}>
+                <Text style={styles.usernamePrefix}>@</Text>
+                <TextInput
+                  style={styles.usernameInput}
+                  placeholder="username"
+                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                  value={username}
+                  onChangeText={setUsername}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </View>
+            </View>
+            
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Date of Birth</Text>
+              <TouchableOpacity 
+                style={styles.dateInput}
+                onPress={showDatePickerModal}
+              >
+                <Text style={[styles.dateText, !dateOfBirth && styles.placeholderText]}>
+                  {formatDisplayDate()}
+                </Text>
+                <Text style={styles.calendarIcon}>📅</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Date of Birth</Text>
+
+          {/* Continue Button - Now part of scrollable content */}
+          <View style={styles.buttonSection}>
             <TouchableOpacity 
-              style={styles.dateInput}
-              onPress={showDatePickerModal}
+              style={styles.continueButton}
+              onPress={handleNext}
             >
-              <Text style={[styles.dateText, !dateOfBirth && styles.placeholderText]}>
-                {formatDisplayDate()}
-              </Text>
-              <Text style={styles.calendarIcon}>📅</Text>
+              <Text style={styles.continueButtonText}>Continue</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
-
-        {/* Continue Button */}
-        <View style={styles.buttonSection}>
-          <TouchableOpacity 
-            style={styles.continueButton}
-            onPress={handleNext}
-          >
-            <Text style={styles.continueButtonText}>Continue</Text>
-          </TouchableOpacity>
-        </View>
 
         {/* Date Picker Modal */}
         <Modal
@@ -334,7 +346,7 @@ export default function PersonalInfo({ onNext, onBack }: PersonalInfoProps) {
             </View>
           </View>
         </Modal>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -344,17 +356,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
   },
-  content: {
+  keyboardAvoidingView: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    justifyContent: "space-between",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 40,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 20,
   },
   backButton: {
     width: 44,
@@ -378,8 +389,15 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "300",
   },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingHorizontal: 24,
+    paddingBottom: 40,
+    flexGrow: 1,
+  },
   titleSection: {
-    alignItems: "flex-start",
     marginBottom: 40,
   },
   title: {
@@ -394,8 +412,8 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   inputSection: {
-    flex: 1,
     paddingTop: 20,
+    flex: 1,
   },
   fieldContainer: {
     marginBottom: 24,
@@ -456,7 +474,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   buttonSection: {
-    paddingBottom: 40,
+    paddingTop: 40,
+    marginTop: 20,
   },
   continueButton: {
     backgroundColor: "white",

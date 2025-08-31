@@ -5,7 +5,10 @@ import {
   StyleSheet, 
   TouchableOpacity, 
   SafeAreaView, 
-  TextInput 
+  TextInput,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform
 } from "react-native";
 
 interface EmailProps {
@@ -24,73 +27,86 @@ export default function Email({ onNext, onBack }: EmailProps) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <Text style={styles.backArrow}>←</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.forwardButton} onPress={handleNext}>
-            <Text style={styles.forwardArrow}>→</Text>
-          </TouchableOpacity>
-        </View>
+      <KeyboardAvoidingView 
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+      >
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.content}>
+            {/* Header */}
+            <View style={styles.header}>
+              <TouchableOpacity style={styles.backButton} onPress={onBack}>
+                <Text style={styles.backArrow}>←</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.forwardButton} onPress={handleNext}>
+                <Text style={styles.forwardArrow}>→</Text>
+              </TouchableOpacity>
+            </View>
 
-        {/* Title and Description */}
-        <View style={styles.titleSection}>
-          <Text style={styles.title}>Create Account</Text>
-          <Text style={styles.subtitle}>
-            Enter your email and password to get started
-          </Text>
-        </View>
+            {/* Title and Description */}
+            <View style={styles.titleSection}>
+              <Text style={styles.title}>Create Account</Text>
+              <Text style={styles.subtitle}>
+                Enter your email and password to get started
+              </Text>
+            </View>
 
-        {/* Form Inputs */}
-        <View style={styles.formSection}>
-          {/* Email Input */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your email"
-              placeholderTextColor="rgba(255, 255, 255, 0.4)"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-          </View>
+            {/* Form Inputs */}
+            <View style={styles.formSection}>
+              {/* Email Input */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Email</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your email"
+                  placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </View>
 
-          {/* Password Input */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Password</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.passwordInput}
-                placeholder="Enter your password"
-                placeholderTextColor="rgba(255, 255, 255, 0.4)"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-              />
-              <TouchableOpacity 
-                style={styles.eyeButton}
-                onPress={() => setShowPassword(!showPassword)}
-              >
-                <Text style={styles.eyeIcon}>
-                  {showPassword ? "👁️" : "👁️‍🗨️"}
-                </Text>
+              {/* Password Input */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Password</Text>
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    style={styles.passwordInput}
+                    placeholder="Enter your password"
+                    placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
+                  />
+                  <TouchableOpacity 
+                    style={styles.eyeButton}
+                    onPress={() => setShowPassword(!showPassword)}
+                  >
+                    <Text style={styles.eyeIcon}>
+                      {showPassword ? "👁️" : "👁️‍🗨️"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+
+            {/* Continue Button */}
+            <View style={styles.buttonSection}>
+              <TouchableOpacity style={styles.continueButton} onPress={handleNext}>
+                <Text style={styles.continueButtonText}>Continue</Text>
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-
-        {/* Continue Button */}
-        <View style={styles.buttonSection}>
-          <TouchableOpacity style={styles.continueButton} onPress={handleNext}>
-            <Text style={styles.continueButtonText}>Continue</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -99,6 +115,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "black",
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   content: {
     flex: 1,

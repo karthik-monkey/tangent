@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput, KeyboardAvoidingView, ScrollView, Platform } from "react-native";
 
 interface PhoneProps {
   onNext: (phoneNumber: string) => void;
@@ -16,56 +16,69 @@ export default function Phone({ onNext, onBack }: PhoneProps) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <Text style={styles.backArrow}>←</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.forwardButton} onPress={handleNext}>
-            <Text style={styles.forwardArrow}>→</Text>
-          </TouchableOpacity>
-        </View>
+      <KeyboardAvoidingView 
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+      >
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.content}>
+            {/* Header */}
+            <View style={styles.header}>
+              <TouchableOpacity style={styles.backButton} onPress={onBack}>
+                <Text style={styles.backArrow}>←</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.forwardButton} onPress={handleNext}>
+                <Text style={styles.forwardArrow}>→</Text>
+              </TouchableOpacity>
+            </View>
 
-        {/* Title and Description */}
-        <View style={styles.titleSection}>
-          <Text style={styles.title}>Add your Phone Number</Text>
-          <Text style={styles.subtitle}>
-            We'll send you a verification code to confirm your number
-          </Text>
-        </View>
+            {/* Title and Description */}
+            <View style={styles.titleSection}>
+              <Text style={styles.title}>Add your Phone Number</Text>
+              <Text style={styles.subtitle}>
+                We'll send you a verification code to confirm your number
+              </Text>
+            </View>
 
-        {/* Phone Input Section */}
-        <View style={styles.formSection}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Phone Number</Text>
-            <View style={styles.phoneContainer}>
-              <Text style={styles.phonePrefix}>+1</Text>
-              <View style={styles.phoneDivider} />
-              <TextInput
-                style={styles.phoneInput}
-                placeholder="(555) 123-4567"
-                placeholderTextColor="rgba(255, 255, 255, 0.4)"
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-                keyboardType="phone-pad"
-                autoFocus
-              />
+            {/* Phone Input Section */}
+            <View style={styles.formSection}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Phone Number</Text>
+                <View style={styles.phoneContainer}>
+                  <Text style={styles.phonePrefix}>+1</Text>
+                  <View style={styles.phoneDivider} />
+                  <TextInput
+                    style={styles.phoneInput}
+                    placeholder="(555) 123-4567"
+                    placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                    value={phoneNumber}
+                    onChangeText={setPhoneNumber}
+                    keyboardType="phone-pad"
+                    autoFocus
+                  />
+                </View>
+              </View>
+            </View>
+
+            {/* Continue Button */}
+            <View style={styles.buttonSection}>
+              <TouchableOpacity 
+                style={[styles.continueButton, !phoneNumber && styles.disabledButton]}
+                onPress={handleNext}
+                disabled={!phoneNumber}
+              >
+                <Text style={styles.continueButtonText}>Continue</Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </View>
-
-        {/* Continue Button */}
-        <View style={styles.buttonSection}>
-          <TouchableOpacity 
-            style={[styles.continueButton, !phoneNumber && styles.disabledButton]}
-            onPress={handleNext}
-            disabled={!phoneNumber}
-          >
-            <Text style={styles.continueButtonText}>Continue</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -74,6 +87,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "black",
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   content: {
     flex: 1,

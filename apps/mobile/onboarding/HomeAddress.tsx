@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 
 interface HomeAddressProps {
   onNext: (address: {
@@ -31,7 +31,11 @@ export default function HomeAddress({ onNext, onBack }: HomeAddressProps) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      <KeyboardAvoidingView 
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+      >
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={onBack}>
@@ -42,77 +46,85 @@ export default function HomeAddress({ onNext, onBack }: HomeAddressProps) {
           </TouchableOpacity>
         </View>
 
-        {/* Title and Description */}
-        <View style={styles.titleSection}>
-          <Text style={styles.title}>Home address</Text>
-          <Text style={styles.subtitle}>
-            This info needs to be accurate with your ID document.
-          </Text>
-        </View>
-
-        {/* Address Inputs */}
-        <ScrollView style={styles.inputSection} showsVerticalScrollIndicator={false}>
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Address Line</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Mr. Jhon Doe"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              value={street}
-              onChangeText={setStreet}
-              autoFocus
-            />
-          </View>
-          
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>City</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="City, State"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              value={city}
-              onChangeText={setCity}
-            />
-          </View>
-          
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Postcode</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Ex: 00000"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              value={zipCode}
-              onChangeText={setZipCode}
-              keyboardType="number-pad"
-              maxLength={10}
-            />
+        {/* Scrollable Content */}
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Title and Description */}
+          <View style={styles.titleSection}>
+            <Text style={styles.title}>Home address</Text>
+            <Text style={styles.subtitle}>
+              This info needs to be accurate with your ID document.
+            </Text>
           </View>
 
-          <View style={styles.fieldContainer}>
-            <Text style={styles.fieldLabel}>Country of Residence</Text>
-            <View style={styles.countryContainer}>
-              <Text style={styles.flagIcon}>🇺🇸</Text>
+          {/* Address Inputs */}
+          <View style={styles.inputSection}>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Address Line</Text>
               <TextInput
-                style={styles.countryInput}
-                placeholder="United States"
+                style={styles.input}
+                placeholder="Mr. Jhon Doe"
                 placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                value={country}
-                onChangeText={setCountry}
+                value={street}
+                onChangeText={setStreet}
+                autoFocus
               />
             </View>
+            
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>City</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="City, State"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                value={city}
+                onChangeText={setCity}
+              />
+            </View>
+            
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Postcode</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ex: 00000"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                value={zipCode}
+                onChangeText={setZipCode}
+                keyboardType="number-pad"
+                maxLength={10}
+              />
+            </View>
+
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Country of Residence</Text>
+              <View style={styles.countryContainer}>
+                <Text style={styles.flagIcon}>🇺🇸</Text>
+                <TextInput
+                  style={styles.countryInput}
+                  placeholder="United States"
+                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                  value={country}
+                  onChangeText={setCountry}
+                />
+              </View>
+            </View>
+          </View>
+
+          {/* Continue Button - Now part of scrollable content */}
+          <View style={styles.buttonSection}>
+            <TouchableOpacity 
+              style={styles.continueButton}
+              onPress={handleNext}
+            >
+              <Text style={styles.continueButtonText}>Continue</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
-
-        {/* Continue Button */}
-        <View style={styles.buttonSection}>
-          <TouchableOpacity 
-            style={styles.continueButton}
-            onPress={handleNext}
-          >
-            <Text style={styles.continueButtonText}>Continue</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -122,17 +134,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
   },
-  content: {
+  keyboardAvoidingView: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    justifyContent: "space-between",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 40,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 20,
   },
   backButton: {
     width: 44,
@@ -156,8 +167,15 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "300",
   },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingHorizontal: 24,
+    paddingBottom: 40,
+    flexGrow: 1,
+  },
   titleSection: {
-    alignItems: "flex-start",
     marginBottom: 40,
   },
   title: {
@@ -172,8 +190,8 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   inputSection: {
-    flex: 1,
     paddingTop: 20,
+    flex: 1,
   },
   fieldContainer: {
     marginBottom: 24,
@@ -212,7 +230,8 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   buttonSection: {
-    paddingBottom: 40,
+    paddingTop: 40,
+    marginTop: 20,
   },
   continueButton: {
     backgroundColor: "white",
