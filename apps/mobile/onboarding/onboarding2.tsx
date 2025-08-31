@@ -1,11 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 
-interface Onboarding2Props {
-  onNext: () => void;
-}
-
-export default function Onboarding2({ onNext }: Onboarding2Props) {
+export default function Onboarding2() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -21,13 +17,6 @@ export default function Onboarding2({ onNext }: Onboarding2Props) {
           <Text style={styles.title}>
             Fast and secure{'\n'}cryptocurrency{'\n'}payments
           </Text>
-        </View>
-
-        {/* Next button */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.nextButton} onPress={onNext}>
-            <Text style={styles.nextButtonText}>Next</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -75,18 +64,4 @@ const styles = StyleSheet.create({
     lineHeight: 40,
     letterSpacing: -0.5,
   },
-  buttonContainer: {
-    paddingBottom: 40,
-  },
-  nextButton: {
-    backgroundColor: "white",
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-  nextButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "black",
-  },
-}); 
+});

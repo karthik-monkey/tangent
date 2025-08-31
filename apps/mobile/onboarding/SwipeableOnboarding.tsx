@@ -5,7 +5,7 @@ interface SwipeableOnboardingProps {
   onFinish: () => void;
 }
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 export default function SwipeableOnboarding({ onFinish }: SwipeableOnboardingProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -14,32 +14,22 @@ export default function SwipeableOnboarding({ onFinish }: SwipeableOnboardingPro
   const onboardingData = [
     {
       title: "Pay with Crypto, Anywhere",
-      subtitle: "Tap to pay at millions of stores worldwide."
+      subtitle: "Tap to pay at millions of stores worldwide.",
     },
     {
       title: "Fast. Simple. Secure.",
-      subtitle: "Every purchase is instant and protected."
+      subtitle: "Every purchase is instant and protected.",
     },
     {
       title: "Designed for Everyday Spending",
-      subtitle: "Track all your payments in one clean view."
-    }
+      subtitle: "Track all your payments in one clean view.",
+    },
   ];
 
   const handleScroll = (event: any) => {
     const scrollPosition = event.nativeEvent.contentOffset.x;
     const index = Math.round(scrollPosition / width);
     setCurrentIndex(index);
-  };
-
-  const handleNext = () => {
-    if (currentIndex < onboardingData.length - 1) {
-      const nextIndex = currentIndex + 1;
-      scrollViewRef.current?.scrollTo({ x: nextIndex * width, animated: true });
-      setCurrentIndex(nextIndex);
-    } else {
-      onFinish();
-    }
   };
 
   const isLastScreen = currentIndex === onboardingData.length - 1;
@@ -52,10 +42,7 @@ export default function SwipeableOnboarding({ onFinish }: SwipeableOnboardingPro
           {onboardingData.map((_, index) => (
             <View
               key={index}
-              style={[
-                styles.dot,
-                index === currentIndex && styles.activeDot
-              ]}
+              style={[styles.dot, index === currentIndex && styles.activeDot]}
             />
           ))}
         </View>
@@ -78,14 +65,14 @@ export default function SwipeableOnboarding({ onFinish }: SwipeableOnboardingPro
           ))}
         </ScrollView>
 
-        {/* Button */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleNext}>
-            <Text style={styles.buttonText}>
-              {isLastScreen ? "Get Started" : "Next"}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {/* Only show button on last screen */}
+        {isLastScreen && (
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={onFinish}>
+              <Text style={styles.buttonText}>Get Started</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -159,4 +146,4 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "black",
   },
-}); 
+});

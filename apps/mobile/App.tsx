@@ -4,7 +4,7 @@ import SplashScreen from './onboarding/splash';
 import SwipeableOnboarding from './onboarding/SwipeableOnboarding';
 import CreateAccount from './onboarding/CreateAccount';
 import ConnectWallet from './onboarding/ConnectWallet';
-import PhoneNumber from './onboarding/PhoneNumber';
+import PhoneNumber from './onboarding/Email';
 import VerificationCode from './onboarding/VerificationCode';
 import EmailAddress from './onboarding/EmailAddress';
 import HomeAddress from './onboarding/HomeAddress';
