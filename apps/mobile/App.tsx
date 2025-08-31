@@ -11,11 +11,14 @@ import PhoneVerification from './onboarding/PhoneVerification';
 import HomeAddress from './onboarding/HomeAddress';
 import PersonalInfo from './onboarding/PersonalInfo';
 import KYCVerification from './onboarding/KYCVerification';
+import PinSetup from './onboarding/PinSetup';
+import PinConfirm from './onboarding/PinConfirm';
 import OnboardingScreen from './onboarding/loginpost';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('splash');
   const [userPhoneNumber, setUserPhoneNumber] = useState('');
+  const [userPin, setUserPin] = useState('');
 
   const handleSplashFinish = () => {
     setCurrentScreen('onboarding');
@@ -61,6 +64,16 @@ export default function App() {
   };
 
   const handleKYCNext = () => {
+    setCurrentScreen('pinSetup');
+  };
+
+  const handlePinSetupNext = (pin: string) => {
+    setUserPin(pin);
+    setCurrentScreen('pinConfirm');
+  };
+
+  const handlePinConfirmNext = () => {
+    console.log('PIN confirmed:', userPin);
     setCurrentScreen('connectWallet');
   };
 
@@ -78,6 +91,12 @@ export default function App() {
     // Simple back navigation logic
     switch (currentScreen) {
       case 'connectWallet':
+        setCurrentScreen('pinConfirm');
+        break;
+      case 'pinConfirm':
+        setCurrentScreen('pinSetup');
+        break;
+      case 'pinSetup':
         setCurrentScreen('kycVerification');
         break;
       case 'kycVerification':
@@ -129,6 +148,10 @@ export default function App() {
         return <PersonalInfo onNext={handlePersonalInfoNext} onBack={handleBack} />;
       case 'kycVerification':
         return <KYCVerification onNext={handleKYCNext} onBack={handleBack} />;
+      case 'pinSetup':
+        return <PinSetup onNext={handlePinSetupNext} onBack={handleBack} />;
+      case 'pinConfirm':
+        return <PinConfirm onNext={handlePinConfirmNext} onBack={handleBack} originalPin={userPin} />;
       case 'connectWallet':
         return <ConnectWallet onProceed={handleProceed} onSkip={handleSkip} onBack={handleBack} />;
       case 'login':
