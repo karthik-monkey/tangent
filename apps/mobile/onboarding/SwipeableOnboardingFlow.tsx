@@ -9,6 +9,7 @@ import CreateAccount from './CreateAccount';
 import ConnectWallet from './ConnectWallet';
 import PhoneNumber from './PhoneNumber';
 import VerificationCode from './VerificationCode';
+import PhoneVerification from './PhoneVerification';
 import EmailAddress from './Phone';
 import HomeAddress from './HomeAddress';
 import PersonalInfo from './PersonalInfo';
@@ -35,7 +36,7 @@ export default function SwipeableOnboardingFlow({ onFinish }: SwipeableOnboardin
   const screens = [
     'createAccount',
     'phoneNumber', 
-    'verificationCode',
+    'phoneVerification',
     'emailAddress',
     'homeAddress',
     'personalInfo',
@@ -46,12 +47,14 @@ export default function SwipeableOnboardingFlow({ onFinish }: SwipeableOnboardin
     const scrollPosition = event.nativeEvent.contentOffset.x;
     const index = Math.round(scrollPosition / width);
     if (index !== currentIndex) {
+      console.log("SwipeableOnboardingFlow: handleScroll - changing from index", currentIndex, "to", index, "screen:", screens[index]);
       setCurrentIndex(index);
     }
   };
 
   const scrollToScreen = (index: number) => {
     if (index >= 0 && index < screens.length) {
+      console.log("SwipeableOnboardingFlow: scrollToScreen called with index:", index, "screen:", screens[index]);
       scrollViewRef.current?.scrollTo({ x: index * width, animated: true });
       setCurrentIndex(index);
     }
@@ -87,8 +90,8 @@ export default function SwipeableOnboardingFlow({ onFinish }: SwipeableOnboardin
     handleNext('phoneNumber', phoneNumber);
   };
 
-  const handleVerificationNext = (code: string) => {
-    handleNext('verificationCode', code);
+  const handlePhoneVerificationNext = (code: string) => {
+    handleNext('phoneVerification', code);
   };
 
   const handleEmailNext = (email: string) => {
@@ -138,13 +141,13 @@ export default function SwipeableOnboardingFlow({ onFinish }: SwipeableOnboardin
           </View>
         );
       
-      case 'verificationCode':
+      case 'phoneVerification':
         return (
           <View key={screenName} style={styles.screen}>
-            <VerificationCode 
-              onNext={handleVerificationNext} 
+            <PhoneVerification 
+              onNext={handlePhoneVerificationNext} 
               onBack={() => handleBack(screenName)} 
-              email={userPhoneNumber} 
+              phoneNumber={userPhoneNumber} 
             />
           </View>
         );

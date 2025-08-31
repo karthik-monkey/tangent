@@ -7,6 +7,7 @@ import ConnectWallet from './onboarding/ConnectWallet';
 import PhoneNumber from './onboarding/Email';
 import VerificationCode from './onboarding/VerificationCode';
 import EmailAddress from './onboarding/Phone';
+import PhoneVerification from './onboarding/PhoneVerification';
 import HomeAddress from './onboarding/HomeAddress';
 import PersonalInfo from './onboarding/PersonalInfo';
 import OnboardingScreen from './onboarding/loginpost';
@@ -40,7 +41,12 @@ export default function App() {
     setCurrentScreen('emailAddress');
   };
 
-  const handleEmailNext = (email: string) => {
+  const handleEmailNext = (phoneNumber: string) => {
+    setUserPhoneNumber(phoneNumber);
+    setCurrentScreen('phoneVerification');
+  };
+
+  const handlePhoneVerificationNext = (code: string) => {
     setCurrentScreen('homeAddress');
   };
 
@@ -73,6 +79,9 @@ export default function App() {
         setCurrentScreen('homeAddress');
         break;
       case 'homeAddress':
+        setCurrentScreen('phoneVerification');
+        break;
+      case 'phoneVerification':
         setCurrentScreen('emailAddress');
         break;
       case 'emailAddress':
@@ -103,6 +112,8 @@ export default function App() {
         return <VerificationCode onNext={handleVerificationNext} onBack={handleBack} />;
       case 'emailAddress':
         return <EmailAddress onNext={handleEmailNext} onBack={handleBack} />;
+      case 'phoneVerification':
+        return <PhoneVerification onNext={handlePhoneVerificationNext} onBack={handleBack} phoneNumber={userPhoneNumber} />;
       case 'homeAddress':
         return <HomeAddress onNext={handleAddressNext} onBack={handleBack} />;
       case 'personalInfo':

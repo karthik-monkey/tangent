@@ -10,7 +10,8 @@ export default function Phone({ onNext, onBack }: PhoneProps) {
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleNext = () => {
-    onNext(phoneNumber || "+1234567890"); // Default for testing
+    // Pass the phone number to the parent component for navigation
+    onNext(phoneNumber || "+1234567890");
   };
 
   return (
