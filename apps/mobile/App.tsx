@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { ConvexProvider, ConvexReactClient } from "convex/react";
 import SplashScreen from './onboarding/splash';
 import SwipeableOnboarding from './onboarding/SwipeableOnboarding';
 import CreateAccount from './onboarding/CreateAccount';
@@ -18,6 +19,10 @@ import PinConfirm from './onboarding/PinConfirm';
 import WelcomeScreen from './onboarding/WelcomeScreen';
 import HomeScreen from './screens/HomeScreen';
 import OnboardingScreen from './onboarding/loginpost';
+
+const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!, {
+  unsavedChangesWarning: false,
+});
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('splash');
@@ -208,9 +213,9 @@ export default function App() {
   };
 
   return (
-    <>
+    <ConvexProvider client={convex}>
       {renderCurrentScreen()}
       <StatusBar style="light" />
-    </>
+    </ConvexProvider>
   );
 }
