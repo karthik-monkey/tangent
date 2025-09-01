@@ -44,6 +44,7 @@ export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
   const [showPaymentReady, setShowPaymentReady] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [password, setPassword] = useState("");
+  const [lastTap, setLastTap] = useState(0);
   
   const handleAddCard = () => {
     if (onAddWallet) {
@@ -85,6 +86,19 @@ export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
     setSelectedCard(null);
   };
 
+  const handleDoubleTap = () => {
+    const now = Date.now();
+    const DOUBLE_PRESS_DELAY = 300; // milliseconds
+    
+    if (lastTap && (now - lastTap) < DOUBLE_PRESS_DELAY) {
+      // Double tap detected - go back to bank cards
+      handlePaymentComplete();
+    } else {
+      // Single tap - just update the lastTap time
+      setLastTap(now);
+    }
+  };
+
 
 
   const renderCard = (card: Card, index: number) => {
@@ -121,7 +135,7 @@ export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
     if (activeTab === 'settings') {
       return (
         <View style={styles.settingsWrapper}>
-          <SettingsScreen />
+          <SettingsScreen onBack={() => setActiveTab('cards')} />
         </View>
       );
     }
@@ -242,7 +256,11 @@ export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
         animationType="slide"
         onRequestClose={handlePaymentComplete}
       >
-        <View style={styles.paymentModalOverlay}>
+        <TouchableOpacity 
+          style={styles.paymentModalOverlay} 
+          activeOpacity={1}
+          onPress={handleDoubleTap}
+        >
           <View style={styles.paymentModal}>
             {/* Selected Card Display - Exact same design as main cards */}
             {selectedCard && (
@@ -276,7 +294,7 @@ export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
             {/* Hold Near Reader Text */}
             <Text style={styles.holdNearText}>Hold Near Reader</Text>
           </View>
-        </View>
+        </TouchableOpacity>
       </Modal>
     </SafeAreaView>
   );
