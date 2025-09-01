@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { TextInput } from 'react-native';
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import SplashScreen from './onboarding/splash';
 import SwipeableOnboarding from './onboarding/SwipeableOnboarding';
@@ -29,6 +30,15 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState('splash');
   const [userPhoneNumber, setUserPhoneNumber] = useState('');
   const [userPin, setUserPin] = useState('');
+
+  // Set global default props for TextInput to use dark keyboard
+  useEffect(() => {
+    const TextInputAny = TextInput as any;
+    if (TextInputAny.defaultProps == null) {
+      TextInputAny.defaultProps = {};
+    }
+    TextInputAny.defaultProps.keyboardAppearance = 'dark';
+  }, []);
 
 
   const handleSplashFinish = () => {
