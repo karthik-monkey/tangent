@@ -39,7 +39,7 @@ const mockCards: Card[] = [
 ];
 
 export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
-  const [showSettings, setShowSettings] = useState(false);
+  const [activeTab, setActiveTab] = useState<'cards' | 'settings'>('cards');
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [showPaymentReady, setShowPaymentReady] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
@@ -53,12 +53,8 @@ export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
     }
   };
 
-  const handleSettingsPress = () => {
-    setShowSettings(true);
-  };
-
-  const handleBackFromSettings = () => {
-    setShowSettings(false);
+  const handleTabPress = (tab: 'cards' | 'settings') => {
+    setActiveTab(tab);
   };
 
   const handleCardPress = (card: Card) => {
@@ -89,9 +85,7 @@ export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
     setSelectedCard(null);
   };
 
-  if (showSettings) {
-    return <SettingsScreen onBack={handleBackFromSettings} />;
-  }
+
 
   const renderCard = (card: Card, index: number) => {
     return (
@@ -123,55 +117,63 @@ export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
     );
   };
 
+  const renderTabContent = () => {
+    if (activeTab === 'settings') {
+      return (
+        <View style={styles.settingsWrapper}>
+          <SettingsScreen />
+        </View>
+      );
+    }
+
+    return (
+      <>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.title}>My Cards</Text>
+          <TouchableOpacity style={styles.addButton} onPress={handleAddCard}>
+            <Text style={styles.addIcon}>+</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Cards */}
+        <ScrollView 
+          style={styles.cardsContainer}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.cardsContent}
+        >
+          {mockCards.map((card, index) => renderCard(card, index))}
+        </ScrollView>
+      </>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>My Cards</Text>
-        <TouchableOpacity style={styles.addButton} onPress={handleAddCard}>
-          <Text style={styles.addIcon}>+</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Cards */}
-      <ScrollView 
-        style={styles.cardsContainer}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.cardsContent}
-      >
-        {mockCards.map((card, index) => renderCard(card, index))}
-      </ScrollView>
+      {/* Tab Content */}
+      {renderTabContent()}
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={[styles.navItem, styles.navItemActive]}>
-          <View style={styles.cardIconContainer}>
-            <View style={styles.cardIcon}>
-              <View style={styles.cardChip} />
-              <View style={styles.cardLines}>
-                <View style={styles.cardLine} />
-                <View style={styles.cardLine} />
-              </View>
-            </View>
-          </View>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.navItem} onPress={handleSettingsPress}>
-          <View style={styles.settingsIcon}>
-            <View style={styles.settingsSlider}>
-              <View style={styles.sliderTrack} />
-              <View style={styles.sliderKnob} />
-            </View>
-            <View style={[styles.settingsSlider, { marginTop: 4 }]}>
-              <View style={styles.sliderTrack} />
-              <View style={[styles.sliderKnob, { left: 10 }]} />
-            </View>
-            <View style={[styles.settingsSlider, { marginTop: 4 }]}>
-              <View style={styles.sliderTrack} />
-              <View style={styles.sliderKnob} />
-            </View>
-          </View>
-        </TouchableOpacity>
+        <View style={styles.navContainer}>
+          <TouchableOpacity 
+            style={[styles.navTab, activeTab === 'cards' && styles.navTabActive]}
+            onPress={() => handleTabPress('cards')}
+          >
+            <Text style={activeTab === 'cards' ? styles.navTabTextActive : styles.navTabText}>
+              Bank cards
+            </Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.navTab, activeTab === 'settings' && styles.navTabActive]}
+            onPress={() => handleTabPress('settings')}
+          >
+            <Text style={activeTab === 'settings' ? styles.navTabTextActive : styles.navTabText}>
+              Settings
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Password Prompt Modal */}
@@ -374,104 +376,43 @@ const styles = StyleSheet.create({
     color: "rgba(210, 210, 220, 0.9)",
   },
   bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
     paddingVertical: 20,
-    paddingHorizontal: 60,
+    paddingHorizontal: 24,
     backgroundColor: "black",
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255, 255, 255, 0.1)",
+    alignItems: "center",
   },
-  navItem: {
-    padding: 8,
-  },
-  navItemActive: {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 8,
-  },
-  cardIconContainer: {
-    padding: 2,
-  },
-  cardIcon: {
-    width: 24,
-    height: 16,
-    backgroundColor: "white",
-    borderRadius: 3,
-    padding: 2,
-    position: "relative",
-  },
-  cardChip: {
-    width: 4,
-    height: 3,
-    backgroundColor: "black",
-    borderRadius: 1,
-    position: "absolute",
-    top: 2,
-    left: 2,
-  },
-  cardLines: {
-    position: "absolute",
-    bottom: 2,
-    right: 2,
-    gap: 1,
-  },
-  cardLine: {
-    width: 8,
-    height: 1,
-    backgroundColor: "black",
-    borderRadius: 0.5,
-  },
-  settingsIcon: {
-    padding: 2,
-    width: 20,
-    height: 20,
-  },
-  settingsSlider: {
-    position: "relative",
-    width: 16,
-    height: 2,
-  },
-  sliderTrack: {
-    width: 16,
-    height: 2,
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
-    borderRadius: 1,
-  },
-  sliderKnob: {
-    position: "absolute",
-    width: 4,
-    height: 4,
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
-    borderRadius: 2,
-    top: -1,
-    left: 2,
-  },
-  chartIcon: {
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
-    borderRadius: 10,
-  },
-  trendIcon: {
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
-    transform: [{ rotate: "45deg" }],
-  },
-  messageIcon: {
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
-    borderRadius: 5,
-  },
-  dotsIcon: {
+  navContainer: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    width: 20,
-    height: 20,
-    justifyContent: "space-between",
-    alignContent: "space-between",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 25,
+    padding: 4,
+    gap: 4,
   },
-  dot: {
-    width: 3,
-    height: 3,
-    borderRadius: 1.5,
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
+  navTab: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+    minWidth: 100,
+    alignItems: "center",
+  },
+  navTabActive: {
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.2)",
+  },
+  navTabText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "rgba(255, 255, 255, 0.7)",
+  },
+  navTabTextActive: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "white",
+  },
+  // Settings Wrapper
+  settingsWrapper: {
+    flex: 1,
   },
   // Password Modal Styles
   modalOverlay: {
