@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Modal, TextInput, Alert } from "react-native";
+import React, { useState, useRef } from "react";
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Modal, TextInput, Alert, Animated, PanResponder } from "react-native";
 import SettingsScreen from "./SettingsScreen";
 
 interface Card {
@@ -46,6 +46,43 @@ export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps =
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [password, setPassword] = useState("");
   const [lastTap, setLastTap] = useState(0);
+  
+  const translateY = useRef(new Animated.Value(0)).current;
+  
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponderCapture: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponderCapture: () => true,
+      onPanResponderMove: (_, gestureState) => {
+        // Only move down, not up
+        if (gestureState.dy > 0) {
+          translateY.setValue(gestureState.dy);
+        }
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        // If swiped down more than 100 pixels, dismiss
+        if (gestureState.dy > 100) {
+          Animated.timing(translateY, {
+            toValue: 800,
+            duration: 200,
+            useNativeDriver: true,
+          }).start(() => {
+            translateY.setValue(0);
+            handlePaymentComplete();
+          });
+        } else {
+          // Snap back to original position
+          Animated.timing(translateY, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true,
+          }).start();
+        }
+      },
+    })
+  ).current;
   
   const handleAddCard = () => {
     if (onAddWallet) {
@@ -262,7 +299,15 @@ export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps =
           activeOpacity={1}
           onPress={handleDoubleTap}
         >
-          <View style={styles.paymentModal}>
+          <Animated.View 
+            style={[
+              styles.paymentModal,
+              {
+                transform: [{ translateY }],
+              },
+            ]}
+            {...panResponder.panHandlers}
+          >
             {/* Selected Card Display - Exact same design as main cards */}
             {selectedCard && (
               <View style={styles.paymentCard}>
@@ -287,14 +332,17 @@ export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps =
               </View>
             )}
 
-            {/* NFC Icon */}
-            <View style={styles.nfcIcon}>
-              <View style={styles.phoneIcon} />
+            {/* Payment Status */}
+            <View style={styles.paymentStatusContainer}>
+              <View style={styles.nfcIndicator}>
+                <View style={styles.nfcWave1} />
+                <View style={styles.nfcWave2} />
+                <View style={styles.nfcWave3} />
+              </View>
+              <Text style={styles.paymentStatusText}>Ready to Pay</Text>
+              <Text style={styles.paymentHintText}>Hold your device near the reader</Text>
             </View>
-
-            {/* Hold Near Reader Text */}
-            <Text style={styles.holdNearText}>Hold Near Reader</Text>
-          </View>
+          </Animated.View>
         </TouchableOpacity>
       </Modal>
     </SafeAreaView>
@@ -528,8 +576,9 @@ const styles = StyleSheet.create({
   paymentModalOverlay: {
     flex: 1,
     backgroundColor: "black",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
+    paddingTop: 120,
   },
   paymentModal: {
     alignItems: "center",
@@ -542,29 +591,53 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "rgba(160, 160, 170, 0.2)",
-    marginBottom: 80,
+    marginBottom: 60,
   },
-  nfcIcon: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "rgba(0, 122, 255, 0.15)",
-    borderWidth: 2,
-    borderColor: "#007AFF",
+  paymentStatusContainer: {
+    alignItems: "center",
+    gap: 12,
+  },
+  nfcIndicator: {
+    width: 80,
+    height: 80,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 24,
+    marginBottom: 8,
   },
-  phoneIcon: {
-    width: 16,
-    height: 24,
-    backgroundColor: "#007AFF",
-    borderRadius: 3,
+  nfcWave1: {
+    position: "absolute",
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.3)",
   },
-  holdNearText: {
-    fontSize: 18,
+  nfcWave2: {
+    position: "absolute",
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.2)",
+  },
+  nfcWave3: {
+    position: "absolute",
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.1)",
+  },
+  paymentStatusText: {
+    fontSize: 24,
+    fontWeight: "600",
+    color: "white",
+    marginBottom: 4,
+  },
+  paymentHintText: {
+    fontSize: 16,
     fontWeight: "400",
-    color: "rgba(255, 255, 255, 0.8)",
+    color: "rgba(255, 255, 255, 0.6)",
     textAlign: "center",
   },
 }); 
