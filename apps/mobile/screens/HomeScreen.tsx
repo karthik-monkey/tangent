@@ -69,7 +69,6 @@ export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps =
             duration: 200,
             useNativeDriver: true,
           }).start(() => {
-            translateY.setValue(0);
             handlePaymentComplete();
           });
         } else {
@@ -97,6 +96,7 @@ export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps =
   };
 
   const handleCardPress = (card: Card) => {
+    translateY.setValue(0); // Reset position before showing modal
     setSelectedCard(card);
     setShowPaymentReady(true);
   };
