@@ -4,6 +4,7 @@ import SplashScreen from './onboarding/splash';
 import SwipeableOnboarding from './onboarding/SwipeableOnboarding';
 import CreateAccount from './onboarding/CreateAccount';
 import ConnectWallet from './onboarding/ConnectWallet';
+import ConnectWalletPost from './onboarding/ConnectWalletPost';
 import PhoneNumber from './onboarding/Email';
 import VerificationCode from './onboarding/VerificationCode';
 import EmailAddress from './onboarding/Phone';
@@ -85,8 +86,21 @@ export default function App() {
     setCurrentScreen('home');
   };
 
+  // Updated to use the post-onboarding connect wallet screen
   const handleAddWallet = () => {
-    setCurrentScreen('connectWallet');
+    setCurrentScreen('connectWalletPost');
+  };
+
+  // Handler for post-onboarding wallet connection
+  const handlePostWalletProceed = () => {
+    // After connecting wallet from home, return to home
+    setCurrentScreen('home');
+  };
+
+  // Handler for canceling post-onboarding wallet connection
+  const handlePostWalletCancel = () => {
+    // Return to home screen
+    setCurrentScreen('home');
   };
 
   const handleProceed = () => {
@@ -170,6 +184,8 @@ export default function App() {
 
       case 'connectWallet':
         return <ConnectWallet onProceed={handleWalletProceed} onSkip={handleSkip} onBack={handleBack} />;
+      case 'connectWalletPost':
+        return <ConnectWalletPost onProceed={handlePostWalletProceed} onCancel={handlePostWalletCancel} />;
       case 'login':
         return <OnboardingScreen />;
       default:

@@ -242,57 +242,37 @@ export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
       >
         <View style={styles.paymentModalOverlay}>
           <View style={styles.paymentModal}>
-                         {/* Large Card Display */}
-             <View style={styles.paymentCard}>
-               <View style={styles.paymentCardGradient}>
-                 {/* Curved Lines Pattern - Multiple concentric curves */}
-                 <View style={styles.curvedLinesContainer}>
-                   {Array.from({ length: 25 }, (_, i) => (
-                     <View
-                       key={i}
-                       style={[
-                         styles.curvedLine,
-                         {
-                           width: 300 + i * 8,
-                           height: 300 + i * 8,
-                           top: -150 - i * 4,
-                           right: -150 - i * 4,
-                         }
-                       ]}
-                     />
-                   ))}
-                 </View>
-                 
-                 {/* Seashell Logo/Brand */}
-                 <Text style={styles.cardBrand}>$$$ seashell</Text>
-                 
-                 {/* Card Number */}
-                 <Text style={styles.paymentCardNumber}>
-                   •••• 1262
-                 </Text>
-                 
-                 {/* Mastercard Logo */}
-                 <View style={styles.paymentMastercard}>
-                   <View style={[styles.mastercardCircle, styles.paymentMastercardLeft]} />
-                   <View style={[styles.mastercardCircle, styles.paymentMastercardRight]} />
-                 </View>
-               </View>
-             </View>
+            {/* Selected Card Display - Exact same design as main cards */}
+            {selectedCard && (
+              <View style={styles.paymentCard}>
+                <View style={styles.cardGradient}>
+                  {/* Mastercard Logo */}
+                  <View style={styles.mastercardContainer}>
+                    <View style={[styles.mastercardCircle, styles.mastercardRed]} />
+                    <View style={[styles.mastercardCircle, styles.mastercardOrange]} />
+                  </View>
+
+                  {/* Card Info */}
+                  <View style={styles.cardInfo}>
+                    <Text style={styles.cardName}>{selectedCard.name}</Text>
+                    <Text style={styles.cardNumber}>** {selectedCard.lastFour}</Text>
+                  </View>
+
+                  {/* Balance */}
+                  <View style={styles.balanceContainer}>
+                    <Text style={styles.balance}>{selectedCard.balance}</Text>
+                  </View>
+                </View>
+              </View>
+            )}
 
             {/* NFC Icon */}
             <View style={styles.nfcIcon}>
-              <View style={styles.nfcIconInner}>
-                <View style={styles.phoneIcon} />
-              </View>
+              <View style={styles.phoneIcon} />
             </View>
 
             {/* Hold Near Reader Text */}
             <Text style={styles.holdNearText}>Hold Near Reader</Text>
-            
-            {/* Cancel Button */}
-            <TouchableOpacity style={styles.cancelPaymentButton} onPress={handlePaymentComplete}>
-              <Text style={styles.cancelPaymentText}>Cancel</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -593,113 +573,37 @@ const styles = StyleSheet.create({
   paymentModal: {
     alignItems: "center",
     width: "100%",
-    paddingHorizontal: 40,
+    paddingHorizontal: 24,
   },
   paymentCard: {
-    width: "90%",
-    height: 200,
-    borderRadius: 20,
-    marginBottom: 60,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-    elevation: 12,
-  },
-  paymentCardGradient: {
-    flex: 1,
-    borderRadius: 20,
-    padding: 24,
-    justifyContent: "space-between",
-    backgroundColor: "#2D5A5E",
-    position: "relative",
+    width: "100%",
+    borderRadius: 16,
     overflow: "hidden",
-  },
-  cardBrand: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "white",
-    position: "absolute",
-    top: 24,
-    left: 24,
-  },
-  paymentCardNumber: {
-    fontSize: 20,
-    fontWeight: "400",
-    color: "white",
-    position: "absolute",
-    bottom: 24,
-    left: 24,
-  },
-  paymentMastercard: {
-    flexDirection: "row",
-    alignItems: "center",
-    position: "absolute",
-    bottom: 24,
-    right: 24,
-  },
-  curvedLinesContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  curvedLine: {
-    position: "absolute",
-    borderRadius: 1000,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.08)",
-  },
-  paymentMastercardLeft: {
-    backgroundColor: "rgba(180, 180, 180, 0.9)",
-    marginRight: -8,
-    zIndex: 1,
-  },
-  paymentMastercardRight: {
-    backgroundColor: "rgba(220, 220, 220, 0.9)",
+    borderColor: "rgba(160, 160, 170, 0.2)",
+    marginBottom: 80,
   },
   nfcIcon: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "rgba(0, 122, 255, 0.2)",
-    borderWidth: 3,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "rgba(0, 122, 255, 0.15)",
+    borderWidth: 2,
     borderColor: "#007AFF",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 30,
-  },
-  nfcIconInner: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: "#007AFF",
-    justifyContent: "center",
-    alignItems: "center",
+    marginBottom: 24,
   },
   phoneIcon: {
-    width: 20,
-    height: 32,
-    backgroundColor: "white",
-    borderRadius: 4,
+    width: 16,
+    height: 24,
+    backgroundColor: "#007AFF",
+    borderRadius: 3,
   },
   holdNearText: {
-    fontSize: 28,
+    fontSize: 18,
     fontWeight: "400",
     color: "rgba(255, 255, 255, 0.8)",
-    marginBottom: 80,
     textAlign: "center",
-  },
-  cancelPaymentButton: {
-    position: "absolute",
-    bottom: 60,
-    paddingHorizontal: 30,
-    paddingVertical: 12,
-  },
-  cancelPaymentText: {
-    fontSize: 18,
-    color: "#007AFF",
-    fontWeight: "500",
   },
 }); 
