@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import CreateAccount from './CreateAccount';
 import ConnectWallet from './ConnectWallet';
-import PhoneNumber from './PhoneNumber';
+import PhoneNumber from './Phone';
 import VerificationCode from './VerificationCode';
 import PhoneVerification from './PhoneVerification';
 import EmailAddress from './Phone';
