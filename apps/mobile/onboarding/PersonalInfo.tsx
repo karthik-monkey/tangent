@@ -6,6 +6,10 @@ interface PersonalInfoProps {
     fullName: string;
     username: string;
     dateOfBirth: string;
+    street: string;
+    city: string;
+    zipCode: string;
+    country: string;
   }) => void;
   onBack?: () => void;
 }
@@ -20,12 +24,22 @@ export default function PersonalInfo({ onNext, onBack }: PersonalInfoProps) {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [showYearPicker, setShowYearPicker] = useState(false);
   const [showMonthPicker, setShowMonthPicker] = useState(false);
+  
+  // Address fields
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [country, setCountry] = useState("United States");
 
   const handleNext = () => {
     onNext({ 
       fullName: fullName || "John Doe", 
       username: username || "johndoe", 
-      dateOfBirth: dateOfBirth || "01/01/1990" 
+      dateOfBirth: dateOfBirth || "01/01/1990",
+      street: street || "123 Main St",
+      city: city || "Anytown", 
+      zipCode: zipCode || "12345",
+      country: country || "United States"
     }); // Default for testing
   };
 
@@ -203,6 +217,56 @@ export default function PersonalInfo({ onNext, onBack }: PersonalInfoProps) {
                 </Text>
                 <Text style={styles.calendarIcon}>📅</Text>
               </TouchableOpacity>
+            </View>
+
+            {/* Address Inputs */}
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Address Line</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="123 Main St"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                value={street}
+                onChangeText={setStreet}
+              />
+            </View>
+            
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>City</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="City, State"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                value={city}
+                onChangeText={setCity}
+              />
+            </View>
+            
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Postcode</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ex: 00000"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                value={zipCode}
+                onChangeText={setZipCode}
+                keyboardType="number-pad"
+                maxLength={10}
+              />
+            </View>
+
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Country of Residence</Text>
+              <View style={styles.countryContainer}>
+                <Text style={styles.flagIcon}>🇺🇸</Text>
+                <TextInput
+                  style={styles.countryInput}
+                  placeholder="United States"
+                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                  value={country}
+                  onChangeText={setCountry}
+                />
+              </View>
             </View>
           </View>
 
@@ -472,6 +536,24 @@ const styles = StyleSheet.create({
   },
   calendarIcon: {
     fontSize: 18,
+  },
+  countryContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+  },
+  flagIcon: {
+    fontSize: 18,
+    marginRight: 12,
+  },
+  countryInput: {
+    flex: 1,
+    fontSize: 16,
+    color: "white",
+    fontWeight: "400",
   },
   buttonSection: {
     paddingTop: 40,

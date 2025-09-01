@@ -8,18 +8,20 @@ import PhoneNumber from './onboarding/Email';
 import VerificationCode from './onboarding/VerificationCode';
 import EmailAddress from './onboarding/Phone';
 import PhoneVerification from './onboarding/PhoneVerification';
-import HomeAddress from './onboarding/HomeAddress';
+
 import PersonalInfo from './onboarding/PersonalInfo';
 import KYCVerification from './onboarding/KYCVerification';
 import PinSetup from './onboarding/PinSetup';
 import PinConfirm from './onboarding/PinConfirm';
 import WelcomeScreen from './onboarding/WelcomeScreen';
+import HomeScreen from './screens/HomeScreen';
 import OnboardingScreen from './onboarding/loginpost';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('splash');
   const [userPhoneNumber, setUserPhoneNumber] = useState('');
   const [userPin, setUserPin] = useState('');
+
 
   const handleSplashFinish = () => {
     setCurrentScreen('onboarding');
@@ -52,13 +54,10 @@ export default function App() {
   };
 
   const handlePhoneVerificationNext = (code: string) => {
-    setCurrentScreen('homeAddress');
-  };
-
-  const handleAddressNext = (address: any) => {
-    console.log('Navigating to personalInfo screen');
     setCurrentScreen('personalInfo');
   };
+
+
 
   const handlePersonalInfoNext = (personalInfo: any) => {
     setCurrentScreen('kycVerification');
@@ -83,8 +82,11 @@ export default function App() {
   };
 
   const handleWelcomeContinue = () => {
-    // This would typically navigate to the main app
-    console.log('Onboarding complete!');
+    setCurrentScreen('home');
+  };
+
+  const handleAddWallet = () => {
+    setCurrentScreen('connectWallet');
   };
 
   const handleProceed = () => {
@@ -100,6 +102,7 @@ export default function App() {
   const handleBack = () => {
     // Simple back navigation logic
     switch (currentScreen) {
+
       case 'welcome':
         setCurrentScreen('connectWallet');
         break;
@@ -116,9 +119,6 @@ export default function App() {
         setCurrentScreen('personalInfo');
         break;
       case 'personalInfo':
-        setCurrentScreen('homeAddress');
-        break;
-      case 'homeAddress':
         setCurrentScreen('phoneVerification');
         break;
       case 'phoneVerification':
@@ -154,8 +154,6 @@ export default function App() {
         return <EmailAddress onNext={handleEmailNext} onBack={handleBack} />;
       case 'phoneVerification':
         return <PhoneVerification onNext={handlePhoneVerificationNext} onBack={handleBack} phoneNumber={userPhoneNumber} />;
-      case 'homeAddress':
-        return <HomeAddress onNext={handleAddressNext} onBack={handleBack} />;
       case 'personalInfo':
         console.log('Rendering PersonalInfo screen');
         return <PersonalInfo onNext={handlePersonalInfoNext} onBack={handleBack} />;
@@ -167,6 +165,9 @@ export default function App() {
         return <PinConfirm onNext={handlePinConfirmNext} onBack={handleBack} originalPin={userPin} />;
       case 'welcome':
         return <WelcomeScreen onContinue={handleWelcomeContinue} />;
+      case 'home':
+        return <HomeScreen onAddWallet={handleAddWallet} />;
+
       case 'connectWallet':
         return <ConnectWallet onProceed={handleWalletProceed} onSkip={handleSkip} onBack={handleBack} />;
       case 'login':

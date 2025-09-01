@@ -11,7 +11,6 @@ import PhoneNumber from './PhoneNumber';
 import VerificationCode from './VerificationCode';
 import PhoneVerification from './PhoneVerification';
 import EmailAddress from './Phone';
-import HomeAddress from './HomeAddress';
 import PersonalInfo from './PersonalInfo';
 
 const { width } = Dimensions.get('window');
@@ -29,7 +28,6 @@ export default function SwipeableOnboardingFlow({ onFinish }: SwipeableOnboardin
   const [formData, setFormData] = useState({
     phoneNumber: '',
     email: '',
-    address: null,
     personalInfo: null,
   });
 
@@ -38,7 +36,6 @@ export default function SwipeableOnboardingFlow({ onFinish }: SwipeableOnboardin
     'phoneNumber', 
     'phoneVerification',
     'emailAddress',
-    'homeAddress',
     'personalInfo',
     'connectWallet'
   ];
@@ -99,10 +96,7 @@ export default function SwipeableOnboardingFlow({ onFinish }: SwipeableOnboardin
     handleNext('emailAddress', email);
   };
 
-  const handleAddressNext = (address: any) => {
-    setFormData(prev => ({ ...prev, address }));
-    handleNext('homeAddress', address);
-  };
+
 
   const handlePersonalInfoNext = (personalInfo: any) => {
     setFormData(prev => ({ ...prev, personalInfo }));
@@ -157,16 +151,6 @@ export default function SwipeableOnboardingFlow({ onFinish }: SwipeableOnboardin
           <View key={screenName} style={styles.screen}>
             <EmailAddress 
               onNext={handleEmailNext} 
-              onBack={() => handleBack(screenName)} 
-            />
-          </View>
-        );
-      
-      case 'homeAddress':
-        return (
-          <View key={screenName} style={styles.screen}>
-            <HomeAddress 
-              onNext={handleAddressNext} 
               onBack={() => handleBack(screenName)} 
             />
           </View>

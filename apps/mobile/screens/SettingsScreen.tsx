@@ -1,0 +1,298 @@
+import React, { useState } from "react";
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Switch } from "react-native";
+
+interface SettingsScreenProps {
+  onBack?: () => void;
+}
+
+export default function SettingsScreen({ onBack }: SettingsScreenProps) {
+  const [faceIdEnabled, setFaceIdEnabled] = useState(true);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [doubleClickEnabled, setDoubleClickEnabled] = useState(true);
+  const [automaticSelection, setAutomaticSelection] = useState(false);
+
+  const renderSettingRow = (title: string, subtitle?: string, rightComponent?: React.ReactNode, onPress?: () => void) => (
+    <TouchableOpacity style={styles.settingRow} onPress={onPress} disabled={!onPress}>
+      <View style={styles.settingContent}>
+        <Text style={styles.settingTitle}>{title}</Text>
+        {subtitle && <Text style={styles.settingSubtitle}>{subtitle}</Text>}
+      </View>
+      {rightComponent && (
+        <View style={styles.settingRight}>
+          {rightComponent}
+        </View>
+      )}
+      {onPress && !rightComponent && (
+        <Text style={styles.chevron}>›</Text>
+      )}
+    </TouchableOpacity>
+  );
+
+  const renderSectionHeader = (title: string) => (
+    <Text style={styles.sectionHeader}>{title}</Text>
+  );
+
+  const renderSeparator = () => <View style={styles.separator} />;
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={onBack}>
+          <Text style={styles.backArrow}>←</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Settings</Text>
+        <View style={styles.placeholder} />
+      </View>
+
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Payment Cards Section */}
+        {renderSectionHeader("PAYMENT CARDS")}
+        <View style={styles.section}>
+          {renderSettingRow(
+            "Add Credit or Debit Card", 
+            undefined, 
+            undefined, 
+            () => console.log("Add card")
+          )}
+          {renderSeparator()}
+          {renderSettingRow(
+            "Card Setup", 
+            "Manage your cards and payment methods", 
+            undefined, 
+            () => console.log("Card setup")
+          )}
+        </View>
+
+        {/* Transaction Defaults Section */}
+        {renderSectionHeader("TRANSACTION DEFAULTS")}
+        <View style={styles.section}>
+          {renderSettingRow(
+            "Default Card", 
+            "Alex Garden •••• 4635", 
+            undefined, 
+            () => console.log("Default card")
+          )}
+          {renderSeparator()}
+          {renderSettingRow(
+            "Shipping Address", 
+            "123 Main St, San Francisco, CA", 
+            undefined, 
+            () => console.log("Shipping address")
+          )}
+          {renderSeparator()}
+          {renderSettingRow(
+            "Email", 
+            "alex@example.com", 
+            undefined, 
+            () => console.log("Email")
+          )}
+          {renderSeparator()}
+          {renderSettingRow(
+            "Phone", 
+            "+1 (555) 123-4567", 
+            undefined, 
+            () => console.log("Phone")
+          )}
+        </View>
+
+        {/* Privacy & Security Section */}
+        {renderSectionHeader("PRIVACY & SECURITY")}
+        <View style={styles.section}>
+          {renderSettingRow(
+            "Face ID", 
+            "Use Face ID to authorize payments and view cards", 
+            <Switch
+              value={faceIdEnabled}
+              onValueChange={setFaceIdEnabled}
+              trackColor={{ false: "rgba(120, 120, 128, 0.16)", true: "rgba(52, 199, 89, 1)" }}
+              thumbColor="white"
+            />
+          )}
+          {renderSeparator()}
+          {renderSettingRow(
+            "Allow Access When Locked", 
+            "Double-click side button to pay", 
+            <Switch
+              value={doubleClickEnabled}
+              onValueChange={setDoubleClickEnabled}
+              trackColor={{ false: "rgba(120, 120, 128, 0.16)", true: "rgba(52, 199, 89, 1)" }}
+              thumbColor="white"
+            />
+          )}
+        </View>
+
+        {/* Notifications Section */}
+        {renderSectionHeader("NOTIFICATIONS")}
+        <View style={styles.section}>
+          {renderSettingRow(
+            "Notifications", 
+            "Transaction alerts and updates", 
+            <Switch
+              value={notificationsEnabled}
+              onValueChange={setNotificationsEnabled}
+              trackColor={{ false: "rgba(120, 120, 128, 0.16)", true: "rgba(52, 199, 89, 1)" }}
+              thumbColor="white"
+            />
+          )}
+          {renderSeparator()}
+          {renderSettingRow(
+            "Automatic Selection", 
+            "Automatically select relevant cards", 
+            <Switch
+              value={automaticSelection}
+              onValueChange={setAutomaticSelection}
+              trackColor={{ false: "rgba(120, 120, 128, 0.16)", true: "rgba(52, 199, 89, 1)" }}
+              thumbColor="white"
+            />
+          )}
+        </View>
+
+        {/* Support Section */}
+        {renderSectionHeader("SUPPORT")}
+        <View style={styles.section}>
+          {renderSettingRow(
+            "Report an Issue", 
+            undefined, 
+            undefined, 
+            () => console.log("Report issue")
+          )}
+          {renderSeparator()}
+          {renderSettingRow(
+            "Help & Feedback", 
+            undefined, 
+            undefined, 
+            () => console.log("Help")
+          )}
+          {renderSeparator()}
+          {renderSettingRow(
+            "Terms & Conditions", 
+            undefined, 
+            undefined, 
+            () => console.log("Terms")
+          )}
+          {renderSeparator()}
+          {renderSettingRow(
+            "Privacy Policy", 
+            undefined, 
+            undefined, 
+            () => console.log("Privacy")
+          )}
+        </View>
+
+        {/* App Info Section */}
+        {renderSectionHeader("APP INFO")}
+        <View style={styles.section}>
+          {renderSettingRow(
+            "Version", 
+            "1.0.0", 
+            undefined, 
+            undefined
+          )}
+          {renderSeparator()}
+          {renderSettingRow(
+            "Build", 
+            "2024.1.1", 
+            undefined, 
+            undefined
+          )}
+        </View>
+
+        <View style={styles.bottomPadding} />
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 20,
+  },
+  backButton: {
+    width: 44,
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  backArrow: {
+    fontSize: 28,
+    color: "white",
+    fontWeight: "300",
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "white",
+  },
+  placeholder: {
+    width: 44,
+    height: 44,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  sectionHeader: {
+    fontSize: 13,
+    fontWeight: "400",
+    color: "rgba(255, 255, 255, 0.6)",
+    marginTop: 30,
+    marginBottom: 8,
+    marginHorizontal: 20,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+  section: {
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    marginHorizontal: 20,
+    borderRadius: 12,
+    overflow: "hidden",
+  },
+  settingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    minHeight: 50,
+  },
+  settingContent: {
+    flex: 1,
+  },
+  settingTitle: {
+    fontSize: 16,
+    fontWeight: "400",
+    color: "white",
+    marginBottom: 2,
+  },
+  settingSubtitle: {
+    fontSize: 14,
+    fontWeight: "400",
+    color: "rgba(255, 255, 255, 0.6)",
+    lineHeight: 18,
+  },
+  settingRight: {
+    marginLeft: 12,
+  },
+  chevron: {
+    fontSize: 20,
+    color: "rgba(255, 255, 255, 0.3)",
+    marginLeft: 8,
+    fontWeight: "300",
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    marginLeft: 16,
+  },
+  bottomPadding: {
+    height: 40,
+  },
+}); 
