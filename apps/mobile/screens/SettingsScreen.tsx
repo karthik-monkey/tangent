@@ -3,13 +3,13 @@ import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Swi
 
 interface SettingsScreenProps {
   onBack?: () => void;
+  onSignOut?: () => void;
+  onAddWallet?: () => void;
 }
 
-export default function SettingsScreen({ onBack }: SettingsScreenProps) {
-  const [faceIdEnabled, setFaceIdEnabled] = useState(true);
+export default function SettingsScreen({ onBack, onSignOut, onAddWallet }: SettingsScreenProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [doubleClickEnabled, setDoubleClickEnabled] = useState(true);
-  const [automaticSelection, setAutomaticSelection] = useState(false);
 
   const renderSettingRow = (title: string, subtitle?: string, rightComponent?: React.ReactNode, onPress?: () => void) => (
     <TouchableOpacity style={styles.settingRow} onPress={onPress} disabled={!onPress}>
@@ -50,15 +50,15 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
         {renderSectionHeader("PAYMENT CARDS")}
         <View style={styles.section}>
           {renderSettingRow(
-            "Add Credit or Debit Card", 
+            "Add Wallet", 
             undefined, 
             undefined, 
-            () => console.log("Add card")
+            onAddWallet
           )}
           {renderSeparator()}
           {renderSettingRow(
-            "Card Setup", 
-            "Manage your cards and payment methods", 
+            "Wallet Setup", 
+            "Manage your wallets and payment methods", 
             undefined, 
             () => console.log("Card setup")
           )}
@@ -68,7 +68,7 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
         {renderSectionHeader("TRANSACTION DEFAULTS")}
         <View style={styles.section}>
           {renderSettingRow(
-            "Default Card", 
+            "Default Wallet", 
             "Alex Garden •••• 4635", 
             undefined, 
             () => console.log("Default card")
@@ -100,14 +100,10 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
         {renderSectionHeader("PRIVACY & SECURITY")}
         <View style={styles.section}>
           {renderSettingRow(
-            "Face ID", 
-            "Use Face ID to authorize payments and view cards", 
-            <Switch
-              value={faceIdEnabled}
-              onValueChange={setFaceIdEnabled}
-              trackColor={{ false: "rgba(120, 120, 128, 0.16)", true: "rgba(52, 199, 89, 1)" }}
-              thumbColor="white"
-            />
+            "Change PIN", 
+            "Update your payment passcode", 
+            undefined, 
+            () => console.log("Change PIN pressed")
           )}
           {renderSeparator()}
           {renderSettingRow(
@@ -131,17 +127,6 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
             <Switch
               value={notificationsEnabled}
               onValueChange={setNotificationsEnabled}
-              trackColor={{ false: "rgba(120, 120, 128, 0.16)", true: "rgba(52, 199, 89, 1)" }}
-              thumbColor="white"
-            />
-          )}
-          {renderSeparator()}
-          {renderSettingRow(
-            "Automatic Selection", 
-            "Automatically select relevant cards", 
-            <Switch
-              value={automaticSelection}
-              onValueChange={setAutomaticSelection}
               trackColor={{ false: "rgba(120, 120, 128, 0.16)", true: "rgba(52, 199, 89, 1)" }}
               thumbColor="white"
             />
@@ -196,6 +181,17 @@ export default function SettingsScreen({ onBack }: SettingsScreenProps) {
             undefined, 
             undefined
           )}
+        </View>
+
+        {/* Logout Section */}
+        {renderSectionHeader("ACCOUNT")}
+        <View style={styles.section}>
+          <TouchableOpacity style={styles.settingRow} onPress={onSignOut}>
+            <View style={styles.settingContent}>
+              <Text style={styles.signOutText}>Sign Out</Text>
+            </View>
+            <Text style={styles.chevron}>›</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.bottomPadding} />
@@ -294,5 +290,11 @@ const styles = StyleSheet.create({
   },
   bottomPadding: {
     height: 40,
+  },
+  signOutText: {
+    fontSize: 16,
+    fontWeight: "400",
+    color: "#FF3B30",
+    marginBottom: 2,
   },
 }); 

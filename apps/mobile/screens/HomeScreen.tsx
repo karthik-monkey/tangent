@@ -12,33 +12,34 @@ interface Card {
 
 interface HomeScreenProps {
   onAddWallet?: () => void;
+  onSignOut?: () => void;
 }
 
 const mockCards: Card[] = [
   {
     id: "1",
-    name: "Alex Garden",
+    name: "Ayesha Satpathy",
     lastFour: "4635",
-    balance: "$2097",
+    balance: "$20900007",
     gradient: ["#FF9A56", "#FF6B9D", "#C471F5", "#5B9BD5"]
   },
   {
     id: "2", 
-    name: "Alex Garden",
+    name: "Ayesha Satpathy",
     lastFour: "9524",
-    balance: "$290",
+    balance: "$2900000",
     gradient: ["#8B5FBF", "#6366F1", "#8B5FBF"]
   },
   {
     id: "3",
-    name: "Alex Garden", 
+    name: "Ayesha Satpathy", 
     lastFour: "7823",
-    balance: "$150",
+    balance: "$1000050",
     gradient: ["#FF7B54", "#FF9478", "#FFB199"]
   }
 ];
 
-export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
+export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps = {}) {
   const [activeTab, setActiveTab] = useState<'cards' | 'settings'>('cards');
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [showPaymentReady, setShowPaymentReady] = useState(false);
@@ -105,7 +106,7 @@ export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
     return (
       <TouchableOpacity 
         key={card.id} 
-        style={[styles.card, { marginTop: index * 12 }]}
+        style={styles.card}
         activeOpacity={0.95}
         onPress={() => handleCardPress(card)}
       >
@@ -135,7 +136,7 @@ export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
     if (activeTab === 'settings') {
       return (
         <View style={styles.settingsWrapper}>
-          <SettingsScreen onBack={() => setActiveTab('cards')} />
+          <SettingsScreen onBack={() => setActiveTab('cards')} onSignOut={onSignOut} onAddWallet={onAddWallet} />
         </View>
       );
     }
@@ -175,7 +176,7 @@ export default function HomeScreen({ onAddWallet }: HomeScreenProps = {}) {
             onPress={() => handleTabPress('cards')}
           >
             <Text style={activeTab === 'cards' ? styles.navTabTextActive : styles.navTabText}>
-              Bank cards
+              Wallets
             </Text>
           </TouchableOpacity>
           
@@ -345,6 +346,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "rgba(160, 160, 170, 0.2)",
+    marginBottom: 16,
   },
   cardGradient: {
     height: 180,

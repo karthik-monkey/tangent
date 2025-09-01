@@ -36,7 +36,7 @@ export default function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
           <View style={styles.textContainer}>
             <Text style={styles.title}>Congratulations!{'\n'}Welcome to Tangent</Text>
             <Text style={styles.description}>
-              We are happy to have you. It's time to send, receive and track your expense.
+              We are happy to have you. It's time to send, receive and track your expenses.
             </Text>
           </View>
         </View>

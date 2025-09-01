@@ -110,6 +110,11 @@ export default function App() {
     setCurrentScreen('home');
   };
 
+  // Handler for signing out
+  const handleSignOut = () => {
+    setCurrentScreen('splash');
+  };
+
   const handleProceed = () => {
     // Handle proceed with selected wallet
     console.log('Proceed with wallet');
@@ -189,7 +194,7 @@ export default function App() {
       case 'welcome':
         return <WelcomeScreen onContinue={handleWelcomeContinue} />;
       case 'home':
-        return <HomeScreen onAddWallet={handleAddWallet} />;
+        return <HomeScreen onAddWallet={handleAddWallet} onSignOut={handleSignOut} />;
 
       case 'connectWallet':
         return <ConnectWallet onProceed={handleWalletProceed} onSkip={handleSkip} onBack={handleBack} />;

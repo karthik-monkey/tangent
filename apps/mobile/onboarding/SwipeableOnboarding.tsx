@@ -37,16 +37,6 @@ export default function SwipeableOnboarding({ onFinish }: SwipeableOnboardingPro
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* Page indicator */}
-        <View style={styles.pageIndicator}>
-          {onboardingData.map((_, index) => (
-            <View
-              key={index}
-              style={[styles.dot, index === currentIndex && styles.activeDot]}
-            />
-          ))}
-        </View>
-
         {/* Swipeable content */}
         <ScrollView
           ref={scrollViewRef}
@@ -64,6 +54,16 @@ export default function SwipeableOnboarding({ onFinish }: SwipeableOnboardingPro
             </View>
           ))}
         </ScrollView>
+
+        {/* Page indicator */}
+        <View style={styles.pageIndicator}>
+          {onboardingData.map((_, index) => (
+            <View
+              key={index}
+              style={[styles.dot, index === currentIndex && styles.activeDot]}
+            />
+          ))}
+        </View>
 
         {/* Only show button on last screen */}
         {isLastScreen && (
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 60,
+    marginBottom: 20,
     gap: 8,
   },
   dot: {
