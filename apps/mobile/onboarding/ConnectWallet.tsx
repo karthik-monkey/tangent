@@ -11,92 +11,81 @@ export default function ConnectWallet({ onProceed, onSkip, onBack }: ConnectWall
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
 
   const walletOptions = [
-    { id: "metamask", name: "MetaMask", icon: "🦊", iconBg: "#F6851B" },
-    { id: "walletconnect", name: "WalletConnect", icon: "🔗", iconBg: "#3B99FC" },
-    { id: "coinbase", name: "Coinbase Wallet", icon: "🔵", iconBg: "#0052FF" },
-    { id: "trust", name: "Trust Wallet", icon: "🛡️", iconBg: "#3375BB" },
+    { id: "metamask", name: "MetaMask" },
+    { id: "walletconnect", name: "WalletConnect" },
+    { id: "coinbase", name: "Coinbase Wallet" },
+    { id: "trust", name: "Trust Wallet" },
+    { id: "phantom", name: "Phantom" },
   ];
 
   const handleWalletSelect = (walletId: string) => {
     setSelectedWallet(walletId);
   };
 
-  const handleAddWallet = () => {
-    // Handle add custom wallet
-    console.log("Add custom wallet");
+  const handleProceed = () => {
+    if (selectedWallet) {
+      console.log(`Proceeding with wallet: ${selectedWallet}`);
+      onProceed();
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* Header with back and skip */}
+        {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={onBack}>
-            <Text style={styles.backArrow}>←</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onSkip}>
+          {onBack && (
+            <TouchableOpacity onPress={onBack} style={styles.headerButton}>
+              <Text style={styles.backText}>←</Text>
+            </TouchableOpacity>
+          )}
+          <View style={{ flex: 1 }} />
+          <TouchableOpacity onPress={onSkip} style={styles.headerButton}>
             <Text style={styles.skipText}>Skip</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Title and Description at top */}
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>Connect Wallet</Text>
-          <Text style={styles.subtitle}>
-            Please connect your preferred crypto wallet to Tangent before you proceed.
-          </Text>
+        {/* Title and Description */}
+        <Text style={styles.title}>Connect Wallet</Text>
+        <Text style={styles.subtitle}>
+          Select your preferred wallet
+        </Text>
+
+        {/* Wallet List */}
+        <View style={styles.listContainer}>
+          {walletOptions.map((wallet) => (
+            <TouchableOpacity
+              key={wallet.id}
+              style={styles.walletOption}
+              onPress={() => handleWalletSelect(wallet.id)}
+            >
+              <Text style={styles.walletName}>{wallet.name}</Text>
+              {selectedWallet === wallet.id ? (
+                <View style={styles.checkCircle}>
+                  <Text style={styles.checkmark}>✓</Text>
+                </View>
+              ) : (
+                <Text style={styles.chevron}>›</Text>
+              )}
+            </TouchableOpacity>
+          ))}
         </View>
 
-        {/* Wallet Options and Buttons */}
-        <View style={styles.bottomContainer}>
-          <ScrollView 
-            style={styles.walletList} 
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContent}
+        {/* Continue Button */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+            style={[
+              styles.continueButton,
+              !selectedWallet && styles.disabledButton
+            ]} 
+            onPress={handleProceed}
+            disabled={!selectedWallet}
           >
-            {walletOptions.map((wallet) => (
-              <TouchableOpacity
-                key={wallet.id}
-                style={[
-                  styles.walletOption,
-                  selectedWallet === wallet.id && styles.selectedWallet
-                ]}
-                onPress={() => handleWalletSelect(wallet.id)}
-              >
-                <View style={styles.walletIcon}>
-                  <Text style={styles.walletIconEmoji}>{wallet.icon}</Text>
-                </View>
-                <Text style={styles.walletName}>{wallet.name}</Text>
-                {selectedWallet === wallet.id && (
-                  <View style={styles.checkmark}>
-                    <Text style={styles.checkmarkText}>✓</Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-            ))}
-
-            {/* Can't find wallet option */}
-            <TouchableOpacity style={styles.addWalletOption} onPress={handleAddWallet}>
-              <View style={styles.addWalletIcon}>
-                <Text style={styles.addWalletIconText}>+</Text>
-              </View>
-              <Text style={styles.walletName}>Can't find your wallet?</Text>
-            </TouchableOpacity>
-          </ScrollView>
-
-          {/* Proceed Button */}
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity 
-              style={[
-                styles.proceedButton,
-                !selectedWallet && styles.disabledButton
-              ]} 
-              onPress={onProceed}
-              disabled={!selectedWallet}
-            >
-              <Text style={styles.proceedButtonText}>Proceed</Text>
-            </TouchableOpacity>
-          </View>
+            <Text style={[
+              styles.continueButtonText,
+              !selectedWallet && styles.disabledButtonText
+            ]}>Continue</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -106,160 +95,91 @@ export default function ConnectWallet({ onProceed, onSkip, onBack }: ConnectWall
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
+    backgroundColor: "#000000",
   },
   content: {
     flex: 1,
-    paddingHorizontal: 32,
-    justifyContent: "space-between",
-    paddingTop: 16,
+    paddingHorizontal: 24,
+    paddingTop: 60,
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 32,
+    marginBottom: 48,
   },
-  backButton: {
-    width: 44,
-    height: 44,
-    justifyContent: "center",
-    alignItems: "center",
+  headerButton: {
+    padding: 4,
   },
-  backArrow: {
-    fontSize: 28,
-    color: "white",
-    fontWeight: "300",
+  backText: {
+    fontSize: 24,
+    color: "#666666",
   },
   skipText: {
-    fontSize: 17,
-    color: "white",
-    fontWeight: "400",
-  },
-  textContainer: {
-    alignItems: "center",
-    marginBottom: 40,
+    fontSize: 16,
+    color: "#666666",
   },
   title: {
-    fontSize: 36,
+    fontSize: 28,
     fontWeight: "600",
     color: "white",
-    textAlign: "center",
-    lineHeight: 42,
-    letterSpacing: -0.8,
-    marginBottom: 12,
+    marginBottom: 8,
   },
   subtitle: {
-    fontSize: 17,
-    color: "rgba(255, 255, 255, 0.6)",
-    textAlign: "center",
-    lineHeight: 24,
-    fontWeight: "400",
-    paddingHorizontal: 20,
+    fontSize: 16,
+    color: "#666666",
+    marginBottom: 48,
   },
-  bottomContainer: {
+  listContainer: {
     flex: 1,
-  },
-  walletList: {
-    flex: 1,
-    marginBottom: 20,
-  },
-  scrollContent: {
-    paddingBottom: 20,
   },
   walletOption: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 14,
-    paddingHorizontal: 18,
-    borderRadius: 12,
-    backgroundColor: "rgba(255, 255, 255, 0.02)",
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.05)",
-  },
-  selectedWallet: {
-    borderColor: "rgba(255, 255, 255, 0.3)",
-    backgroundColor: "rgba(255, 255, 255, 0.04)",
-  },
-  addWalletOption: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 14,
-    paddingHorizontal: 18,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.15)",
-    backgroundColor: "transparent",
-    marginBottom: 8,
-    marginTop: 6,
-  },
-  walletIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 16,
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
-  },
-  walletIconEmoji: {
-    fontSize: 16,
-  },
-  addWalletIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 8,
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.15)",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 16,
-  },
-  addWalletIconText: {
-    fontSize: 18,
-    fontWeight: "200",
-    color: "rgba(255, 255, 255, 0.5)",
+    justifyContent: "space-between",
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#0A0A0A",
   },
   walletName: {
-    fontSize: 16,
-    fontWeight: "500",
+    fontSize: 17,
     color: "white",
-    flex: 1,
+    fontWeight: "400",
   },
-  checkmark: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
+  chevron: {
+    fontSize: 20,
+    color: "#333333",
+  },
+  checkCircle: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
   },
-  checkmarkText: {
-    fontSize: 12,
-    fontWeight: "600",
+  checkmark: {
+    fontSize: 14,
     color: "black",
+    fontWeight: "600",
   },
   buttonContainer: {
-    paddingBottom: 44,
+    paddingVertical: 32,
   },
-  proceedButton: {
+  continueButton: {
     backgroundColor: "white",
-    paddingVertical: 18,
-    borderRadius: 16,
+    paddingVertical: 16,
+    borderRadius: 12,
     alignItems: "center",
-    shadowColor: "rgba(255, 255, 255, 0.1)",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 8,
   },
   disabledButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: "#0A0A0A",
   },
-  proceedButtonText: {
-    fontSize: 17,
+  continueButtonText: {
+    fontSize: 16,
     fontWeight: "600",
     color: "black",
+  },
+  disabledButtonText: {
+    color: "#333333",
   },
 });
