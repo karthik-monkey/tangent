@@ -6,6 +6,7 @@ import CreateAccount from './onboarding/CreateAccount';
 import ConnectWallet from './onboarding/ConnectWallet';
 import ConnectWalletPost from './onboarding/ConnectWalletPost';
 import PhoneNumber from './onboarding/Email';
+import Login from './onboarding/Login';
 import VerificationCode from './onboarding/VerificationCode';
 import EmailAddress from './onboarding/Phone';
 import PhoneVerification from './onboarding/PhoneVerification';
@@ -37,7 +38,13 @@ export default function App() {
   };
 
   const handleLogIn = () => {
-    setCurrentScreen('phoneNumber');
+    setCurrentScreen('loginScreen');
+  };
+
+  const handleLoginNext = (email: string) => {
+    // For login, we can skip straight to the home screen
+    // In a real app, this would authenticate the user first
+    setCurrentScreen('home');
   };
 
   const handlePhoneNext = (phoneNumber: string) => {
@@ -160,6 +167,8 @@ export default function App() {
         return <SwipeableOnboarding onFinish={handleOnboardingFinish} />;
       case 'createAccount':
         return <CreateAccount onSignUp={handleSignUp} onLogIn={handleLogIn} />;
+      case 'loginScreen':
+        return <Login onNext={handleLoginNext} onBack={handleBack} />;
       case 'phoneNumber':
         return <PhoneNumber onNext={handlePhoneNext} onBack={handleBack} />;
       case 'verificationCode':
