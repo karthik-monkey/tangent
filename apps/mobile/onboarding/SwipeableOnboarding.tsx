@@ -55,24 +55,29 @@ export default function SwipeableOnboarding({ onFinish }: SwipeableOnboardingPro
           ))}
         </ScrollView>
 
-        {/* Page indicator */}
-        <View style={styles.pageIndicator}>
-          {onboardingData.map((_, index) => (
-            <View
-              key={index}
-              style={[styles.dot, index === currentIndex && styles.activeDot]}
-            />
-          ))}
-        </View>
-
-        {/* Only show button on last screen */}
-        {isLastScreen && (
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={onFinish}>
-              <Text style={styles.buttonText}>Get Started</Text>
-            </TouchableOpacity>
+        {/* Bottom section with fixed positioning */}
+        <View style={styles.bottomSection}>
+          {/* Page indicator */}
+          <View style={styles.pageIndicator}>
+            {onboardingData.map((_, index) => (
+              <View
+                key={index}
+                style={[styles.dot, index === currentIndex && styles.activeDot]}
+              />
+            ))}
           </View>
-        )}
+
+          {/* Button placeholder/actual button */}
+          <View style={styles.buttonContainer}>
+            {isLastScreen ? (
+              <TouchableOpacity style={styles.button} onPress={onFinish}>
+                <Text style={styles.buttonText}>Get Started</Text>
+              </TouchableOpacity>
+            ) : (
+              <View style={styles.buttonPlaceholder} />
+            )}
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -86,7 +91,13 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 24,
-    justifyContent: "space-between",
+  },
+  bottomSection: {
+    position: "absolute",
+    bottom: 0,
+    left: 24,
+    right: 24,
+    paddingBottom: 40,
   },
   pageIndicator: {
     flexDirection: "row",
@@ -133,7 +144,10 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   buttonContainer: {
-    paddingBottom: 40,
+    height: 48,
+  },
+  buttonPlaceholder: {
+    height: 48,
   },
   button: {
     backgroundColor: "white",
