@@ -20,7 +20,8 @@ import WelcomeScreen from './onboarding/WelcomeScreen';
 import HomeScreen from './screens/HomeScreen';
 import OnboardingScreen from './onboarding/loginpost';
 
-const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!, {
+const convexUrl = process.env.EXPO_PUBLIC_CONVEX_URL || 'https://your-project.convex.cloud';
+const convex = new ConvexReactClient(convexUrl, {
   unsavedChangesWarning: false,
 });
 
