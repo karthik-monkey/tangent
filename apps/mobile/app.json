@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Tangent",
+    "slug": "tangent-app",
     "version": "1.0.0",
+    "description": "A minimalist social wallet app for seamless crypto interactions and community engagement",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -13,13 +14,23 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tangent.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "CFBundleDisplayName": "Tangent",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "package": "com.tangent.app",
+      "versionCode": 1,
       "edgeToEdgeEnabled": true
     },
     "web": {

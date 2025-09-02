@@ -1,6 +1,9 @@
 {
-  "name": "mobile",
+  "name": "tangent-app",
+  "displayName": "Tangent",
   "version": "1.0.0",
+  "description": "A minimalist social wallet app for seamless crypto interactions and community engagement",
+  "author": "Tangent Team",
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
