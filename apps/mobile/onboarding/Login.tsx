@@ -14,9 +14,10 @@ import {
 interface LoginProps {
   onNext: (email: string) => void;
   onBack?: () => void;
+  onGoogleLogin?: () => void;
 }
 
-export default function Login({ onNext, onBack }: LoginProps) {
+export default function Login({ onNext, onBack, onGoogleLogin }: LoginProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -109,6 +110,21 @@ export default function Login({ onNext, onBack }: LoginProps) {
             <View style={styles.buttonSection}>
               <TouchableOpacity style={styles.continueButton} onPress={handleNext}>
                 <Text style={styles.continueButtonText}>Sign In</Text>
+              </TouchableOpacity>
+
+              {/* Divider */}
+              <View style={styles.dividerContainer}>
+                <View style={styles.divider} />
+                <Text style={styles.orText}>or</Text>
+                <View style={styles.divider} />
+              </View>
+
+              {/* Google Login Button */}
+              <TouchableOpacity style={styles.googleButton} onPress={onGoogleLogin}>
+                <View style={styles.googleIcon}>
+                  <Text style={styles.googleG}>G</Text>
+                </View>
+                <Text style={styles.googleButtonText}>Sign in with Google</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -242,10 +258,58 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
+    marginBottom: 24,
   },
   continueButtonText: {
     fontSize: 16,
     fontWeight: "600",
     color: "black",
+  },
+  dividerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+  },
+  orText: {
+    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.5)",
+    marginHorizontal: 16,
+  },
+  googleButton: {
+    flexDirection: "row",
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.2)",
+  },
+  googleIcon: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  googleG: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#4285F4",
+  },
+  googleButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#FFFFFF",
+    flex: 1,
+    textAlign: "center",
+    marginRight: 36,
   },
 }); 
