@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Switch, Alert } from "react-native";
 import ChangePinModal from "../components/ChangePinModal";
 import WalletSelector from "../components/WalletSelector";
+import ChangeAddressModal from "../components/ChangeAddressModal";
 
 interface SettingsScreenProps {
   onBack?: () => void;
@@ -16,11 +17,19 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, current
   const [doubleClickEnabled, setDoubleClickEnabled] = useState(true);
   const [showChangePinModal, setShowChangePinModal] = useState(false);
   const [showWalletSelector, setShowWalletSelector] = useState(false);
+  const [showChangeAddressModal, setShowChangeAddressModal] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState({
     id: "wallet1",
     name: "Alex Garden",
     address: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bE4635",
     type: "MetaMask"
+  });
+  const [homeAddress, setHomeAddress] = useState({
+    street: "123 Main St",
+    city: "San Francisco",
+    state: "CA",
+    zipCode: "94105",
+    country: "United States"
   });
 
   // Mock wallet data - in a real app, this would come from your state management
@@ -46,6 +55,16 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, current
   const formatWalletDisplay = () => {
     const lastFour = selectedWallet.address.slice(-4);
     return `${selectedWallet.name} •••• ${lastFour}`;
+  };
+
+  const formatAddressDisplay = () => {
+    return `${homeAddress.street}, ${homeAddress.city}, ${homeAddress.state}`;
+  };
+
+  const handleAddressChanged = (newAddress: typeof homeAddress) => {
+    setHomeAddress(newAddress);
+    setShowChangeAddressModal(false);
+    Alert.alert("Success", "Your home address has been updated", [{ text: "OK" }]);
   };
 
   const renderSettingRow = (title: string, subtitle?: string, rightComponent?: React.ReactNode, onPress?: () => void) => (
@@ -112,10 +131,10 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, current
           )}
           {renderSeparator()}
           {renderSettingRow(
-            "Shipping Address", 
-            "123 Main St, San Francisco, CA", 
+            "Home Address", 
+            formatAddressDisplay(), 
             undefined, 
-            () => console.log("Shipping address")
+            () => setShowChangeAddressModal(true)
           )}
           {renderSeparator()}
           {renderSettingRow(
@@ -245,6 +264,13 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, current
         onSelect={handleWalletSelect}
         currentWalletId={selectedWallet.id}
         wallets={availableWallets}
+      />
+
+      <ChangeAddressModal
+        visible={showChangeAddressModal}
+        onClose={() => setShowChangeAddressModal(false)}
+        currentAddress={homeAddress}
+        onAddressChanged={handleAddressChanged}
       />
     </SafeAreaView>
   );
