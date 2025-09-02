@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Switch, Alert } from "react-native";
 import ChangePinModal from "../components/ChangePinModal";
+import WalletSelector from "../components/WalletSelector";
 
 interface SettingsScreenProps {
   onBack?: () => void;
@@ -14,11 +15,37 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, current
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [doubleClickEnabled, setDoubleClickEnabled] = useState(true);
   const [showChangePinModal, setShowChangePinModal] = useState(false);
+  const [showWalletSelector, setShowWalletSelector] = useState(false);
+  const [selectedWallet, setSelectedWallet] = useState({
+    id: "wallet1",
+    name: "Alex Garden",
+    address: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bE4635",
+    type: "MetaMask"
+  });
+
+  // Mock wallet data - in a real app, this would come from your state management
+  const availableWallets = [
+    { id: "wallet1", name: "Alex Garden", address: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bE4635", type: "MetaMask" },
+    { id: "wallet2", name: "Personal Wallet", address: "0x8901234567890123456789012345678901234567", type: "WalletConnect" },
+    { id: "wallet3", name: "Trading Account", address: "0x1234567890123456789012345678901234567890", type: "Coinbase" },
+    { id: "wallet4", name: "Savings Wallet", address: "0xABCDEF1234567890ABCDEF1234567890ABCDEF12", type: "Trust Wallet" },
+    { id: "wallet5", name: "DeFi Wallet", address: "0x9876543210987654321098765432109876543210", type: "Phantom" },
+  ];
 
   const handlePinChanged = (newPin: string) => {
     setShowChangePinModal(false);
     onPinChanged?.(newPin);
     Alert.alert("Success", "Your PIN has been updated", [{ text: "OK" }]);
+  };
+
+  const handleWalletSelect = (wallet: any) => {
+    setSelectedWallet(wallet);
+    console.log("Selected wallet:", wallet);
+  };
+
+  const formatWalletDisplay = () => {
+    const lastFour = selectedWallet.address.slice(-4);
+    return `${selectedWallet.name} •••• ${lastFour}`;
   };
 
   const renderSettingRow = (title: string, subtitle?: string, rightComponent?: React.ReactNode, onPress?: () => void) => (
@@ -79,9 +106,9 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, current
         <View style={styles.section}>
           {renderSettingRow(
             "Default Wallet", 
-            "Alex Garden •••• 4635", 
+            formatWalletDisplay(), 
             undefined, 
-            () => console.log("Default card")
+            () => setShowWalletSelector(true)
           )}
           {renderSeparator()}
           {renderSettingRow(
@@ -212,6 +239,14 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, current
         onClose={() => setShowChangePinModal(false)}
         currentPin={currentPin}
         onPinChanged={handlePinChanged}
+      />
+
+      <WalletSelector
+        visible={showWalletSelector}
+        onClose={() => setShowWalletSelector(false)}
+        onSelect={handleWalletSelect}
+        currentWalletId={selectedWallet.id}
+        wallets={availableWallets}
       />
     </SafeAreaView>
   );
