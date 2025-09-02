@@ -119,17 +119,15 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, current
           )}
           {renderSeparator()}
           {renderSettingRow(
-            "Email", 
-            "alex@example.com", 
-            undefined, 
-            () => console.log("Email")
-          )}
-          {renderSeparator()}
-          {renderSettingRow(
             "Phone", 
             "+1 (555) 123-4567", 
             undefined, 
             () => console.log("Phone")
+          )}
+          {renderSeparator()}
+          {renderSettingRow(
+            "Email", 
+            "alex@example.com"
           )}
         </View>
 
