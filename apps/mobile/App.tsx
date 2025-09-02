@@ -22,6 +22,7 @@ import HomeScreen from './screens/HomeScreen';
 import OnboardingScreen from './onboarding/loginpost';
 import GoogleSignUp from './onboarding/GoogleSignUp';
 import GoogleLogin from './onboarding/GoogleLogin';
+import WalletSetupScreen from './screens/WalletSetupScreen';
 
 const convexUrl = process.env.EXPO_PUBLIC_CONVEX_URL || 'https://your-project.convex.cloud';
 const convex = new ConvexReactClient(convexUrl, {
@@ -165,6 +166,16 @@ export default function App() {
     setCurrentScreen('splash');
   };
 
+  // Handler for wallet setup
+  const handleWalletSetup = () => {
+    setCurrentScreen('walletSetup');
+  };
+
+  // Handler for wallet setup back
+  const handleWalletSetupBack = () => {
+    setCurrentScreen('home');
+  };
+
   const handleProceed = () => {
     // Handle proceed with selected wallet
     console.log('Proceed with wallet');
@@ -242,12 +253,14 @@ export default function App() {
       case 'welcome':
         return <WelcomeScreen onContinue={handleWelcomeContinue} />;
       case 'home':
-        return <HomeScreen onAddWallet={handleAddWallet} onSignOut={handleSignOut} />;
+        return <HomeScreen onAddWallet={handleAddWallet} onSignOut={handleSignOut} onWalletSetup={handleWalletSetup} />;
 
       case 'connectWallet':
         return <ConnectWallet onProceed={handleWalletProceed} onSkip={handleSkip} onBack={handleBack} />;
       case 'connectWalletPost':
         return <ConnectWalletPost onProceed={handlePostWalletProceed} onCancel={handlePostWalletCancel} />;
+      case 'walletSetup':
+        return <WalletSetupScreen onBack={handleWalletSetupBack} onAddWallet={handleAddWallet} />;
       case 'login':
         return <OnboardingScreen />;
       default:
