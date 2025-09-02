@@ -4,10 +4,10 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, TextInput, Keyb
 interface VerificationCodeProps {
   onNext: (code: string) => void;
   onBack?: () => void;
-  email?: string;
+  phoneNumber?: string;
 }
 
-export default function VerificationCode({ onNext, onBack, email }: VerificationCodeProps) {
+export default function VerificationCode({ onNext, onBack, phoneNumber }: VerificationCodeProps) {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<(TextInput | null)[]>([]);
 
@@ -63,9 +63,9 @@ export default function VerificationCode({ onNext, onBack, email }: Verification
 
             {/* Title and Description */}
             <View style={styles.titleSection}>
-              <Text style={styles.title}>Confirm your email</Text>
+              <Text style={styles.title}>Verify your phone</Text>
               <Text style={styles.subtitle}>
-                We sent a 6-digit code to {email || "your email address"}
+                We sent a 6-digit code to {phoneNumber || "your phone number"}
               </Text>
             </View>
 
@@ -105,7 +105,7 @@ export default function VerificationCode({ onNext, onBack, email }: Verification
             {/* Verify Button */}
             <View style={styles.buttonSection}>
               <TouchableOpacity style={styles.verifyButton} onPress={handleNext}>
-                <Text style={styles.verifyButtonText}>Verify Your Email</Text>
+                <Text style={styles.verifyButtonText}>Verify Phone Number</Text>
               </TouchableOpacity>
             </View>
           </View>

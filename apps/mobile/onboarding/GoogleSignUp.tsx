@@ -1,19 +1,39 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  ActivityIndicator,
+  Image,
+} from "react-native";
 
-interface CreateAccountProps {
-  onSignUp: () => void;
-  onLogIn: () => void;
-  onGoogleSignUp?: () => void;
+interface GoogleSignUpProps {
+  onSuccess: () => void;
+  onBack?: () => void;
 }
 
-export default function CreateAccount({ onSignUp, onLogIn, onGoogleSignUp }: CreateAccountProps) {
+export default function GoogleSignUp({ onSuccess, onBack }: GoogleSignUpProps) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleGoogleSignUp = async () => {
+    setIsLoading(true);
+    // Simulate Google OAuth flow
+    setTimeout(() => {
+      setIsLoading(false);
+      onSuccess();
+    }, 1500);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         {/* Header */}
         <View style={styles.header}>
-          <View style={styles.backButton} />
+          <TouchableOpacity style={styles.backButton} onPress={onBack}>
+            <Text style={styles.backArrow}>←</Text>
+          </TouchableOpacity>
           <View style={styles.forwardButton} />
         </View>
 
@@ -36,21 +56,31 @@ export default function CreateAccount({ onSignUp, onLogIn, onGoogleSignUp }: Cre
 
           {/* Text Content */}
           <View style={styles.textContainer}>
-            <Text style={styles.title}>Create your{'\n'}Tangent account</Text>
+            <Text style={styles.title}>Sign up with{'\n'}Google</Text>
             <Text style={styles.description}>
-              Tangent is a powerful tool that allows you to easily send, receive, and track all your transactions.
+              Connect your Google account to create your Tangent account instantly.
             </Text>
           </View>
         </View>
 
         {/* Buttons */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.signUpButton} onPress={onGoogleSignUp}>
-            <Text style={styles.signUpButtonText}>Sign up</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.logInButton} onPress={onLogIn}>
-            <Text style={styles.logInButtonText}>Log in</Text>
+          <TouchableOpacity 
+            style={styles.googleButton} 
+            onPress={handleGoogleSignUp}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <>
+                <Image 
+                  source={require('../assets/google-logo.png')} 
+                  style={styles.googleLogo}
+                />
+                <Text style={styles.googleButtonText}>Continue with Google</Text>
+              </>
+            )}
           </TouchableOpacity>
 
           <Text style={styles.termsText}>
@@ -82,6 +112,13 @@ const styles = StyleSheet.create({
   backButton: {
     width: 44,
     height: 44,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  backArrow: {
+    fontSize: 28,
+    color: "#FFFFFF",
+    fontWeight: "300",
   },
   forwardButton: {
     width: 44,
@@ -180,33 +217,23 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingBottom: 40,
   },
-  signUpButton: {
-    backgroundColor: "#FFFFFF",
-    paddingVertical: 18,
-    borderRadius: 12,
-    alignItems: "center",
-    marginBottom: 16,
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  signUpButtonText: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#000000",
-  },
-  logInButton: {
+  googleButton: {
+    flexDirection: "row",
     backgroundColor: "transparent",
     paddingVertical: 18,
     borderRadius: 12,
     alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.3)",
-    marginBottom: 24,
   },
-  logInButtonText: {
+  googleLogo: {
+    width: 20,
+    height: 20,
+    marginRight: 12,
+  },
+  googleButtonText: {
     fontSize: 18,
     fontWeight: "600",
     color: "#FFFFFF",
@@ -221,52 +248,4 @@ const styles = StyleSheet.create({
     color: "rgba(255, 255, 255, 0.8)",
     textDecorationLine: "underline",
   },
-  googleButton: {
-    flexDirection: "row",
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    alignItems: "center",
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
-  },
-  googleIcon: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#FFFFFF",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-  googleG: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#4285F4",
-  },
-  googleButtonText: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#FFFFFF",
-    flex: 1,
-    textAlign: "center",
-    marginRight: 36,
-  },
-  dividerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  divider: {
-    flex: 1,
-    height: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-  },
-  orText: {
-    fontSize: 14,
-    color: "rgba(255, 255, 255, 0.5)",
-    marginHorizontal: 16,
-  },
-}); 
+});

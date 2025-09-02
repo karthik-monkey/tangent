@@ -7,10 +7,10 @@ import SwipeableOnboarding from './onboarding/SwipeableOnboarding';
 import CreateAccount from './onboarding/CreateAccount';
 import ConnectWallet from './onboarding/ConnectWallet';
 import ConnectWalletPost from './onboarding/ConnectWalletPost';
-import PhoneNumber from './onboarding/Email';
+import PhoneNumber from './onboarding/Phone';
 import Login from './onboarding/Login';
 import VerificationCode from './onboarding/VerificationCode';
-import EmailAddress from './onboarding/Phone';
+import EmailAddress from './onboarding/Email';
 import PhoneVerification from './onboarding/PhoneVerification';
 
 import PersonalInfo from './onboarding/PersonalInfo';
@@ -20,6 +20,8 @@ import PinConfirm from './onboarding/PinConfirm';
 import WelcomeScreen from './onboarding/WelcomeScreen';
 import HomeScreen from './screens/HomeScreen';
 import OnboardingScreen from './onboarding/loginpost';
+import GoogleSignUp from './onboarding/GoogleSignUp';
+import GoogleLogin from './onboarding/GoogleLogin';
 
 const convexUrl = process.env.EXPO_PUBLIC_CONVEX_URL || 'https://your-project.convex.cloud';
 const convex = new ConvexReactClient(convexUrl, {
@@ -50,10 +52,39 @@ export default function App() {
   };
 
   const handleSignUp = () => {
-    setCurrentScreen('phoneNumber');
+    // Regular sign up now goes to Google sign up
+    setCurrentScreen('googleSignUp');
   };
 
   const handleLogIn = () => {
+    setCurrentScreen('googleLogin');
+  };
+
+  const handleGoogleSignUp = () => {
+    setCurrentScreen('googleSignUp');
+  };
+
+  const handleGoogleLogin = () => {
+    setCurrentScreen('googleLogin');
+  };
+
+  const handleGoogleSignUpSuccess = () => {
+    // After successful Google sign-up, go to phone number collection
+    setCurrentScreen('phoneNumber');
+  };
+
+  const handleGoogleLoginSuccess = () => {
+    // After successful Google login, go straight to home screen
+    setCurrentScreen('home');
+  };
+
+  const handleGoogleSignUpEmail = () => {
+    // Go back to regular sign up flow
+    setCurrentScreen('phoneNumber');
+  };
+
+  const handleGoogleLoginEmail = () => {
+    // Go back to regular login flow
     setCurrentScreen('loginScreen');
   };
 
@@ -69,15 +100,18 @@ export default function App() {
   };
 
   const handleVerificationNext = (code: string) => {
-    setCurrentScreen('emailAddress');
+    // After phone verification, skip email and go straight to personal info
+    setCurrentScreen('personalInfo');
   };
 
   const handleEmailNext = (phoneNumber: string) => {
+    // This is no longer used in Google auth flow
     setUserPhoneNumber(phoneNumber);
     setCurrentScreen('phoneVerification');
   };
 
   const handlePhoneVerificationNext = (code: string) => {
+    // This is no longer used in Google auth flow
     setCurrentScreen('personalInfo');
   };
 
@@ -161,12 +195,6 @@ export default function App() {
         setCurrentScreen('personalInfo');
         break;
       case 'personalInfo':
-        setCurrentScreen('phoneVerification');
-        break;
-      case 'phoneVerification':
-        setCurrentScreen('emailAddress');
-        break;
-      case 'emailAddress':
         setCurrentScreen('verificationCode');
         break;
       case 'verificationCode':
@@ -187,13 +215,17 @@ export default function App() {
       case 'onboarding':
         return <SwipeableOnboarding onFinish={handleOnboardingFinish} />;
       case 'createAccount':
-        return <CreateAccount onSignUp={handleSignUp} onLogIn={handleLogIn} />;
+        return <CreateAccount onSignUp={handleSignUp} onLogIn={handleLogIn} onGoogleSignUp={handleGoogleSignUp} />;
       case 'loginScreen':
-        return <Login onNext={handleLoginNext} onBack={handleBack} />;
+        return <Login onNext={handleLoginNext} onBack={handleBack} onGoogleLogin={handleGoogleLogin} />;
+      case 'googleSignUp':
+        return <GoogleSignUp onSuccess={handleGoogleSignUpSuccess} onBack={() => setCurrentScreen('createAccount')} />;
+      case 'googleLogin':
+        return <GoogleLogin onSuccess={handleGoogleLoginSuccess} onBack={() => setCurrentScreen('createAccount')} />;
       case 'phoneNumber':
         return <PhoneNumber onNext={handlePhoneNext} onBack={handleBack} />;
       case 'verificationCode':
-        return <VerificationCode onNext={handleVerificationNext} onBack={handleBack} />;
+        return <VerificationCode onNext={handleVerificationNext} onBack={handleBack} phoneNumber={userPhoneNumber} />;
       case 'emailAddress':
         return <EmailAddress onNext={handleEmailNext} onBack={handleBack} />;
       case 'phoneVerification':
