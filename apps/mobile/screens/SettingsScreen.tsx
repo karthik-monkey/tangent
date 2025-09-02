@@ -1,15 +1,25 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Switch } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Switch, Alert } from "react-native";
+import ChangePinModal from "../components/ChangePinModal";
 
 interface SettingsScreenProps {
   onBack?: () => void;
   onSignOut?: () => void;
   onAddWallet?: () => void;
+  currentPin?: string;
+  onPinChanged?: (newPin: string) => void;
 }
 
-export default function SettingsScreen({ onBack, onSignOut, onAddWallet }: SettingsScreenProps) {
+export default function SettingsScreen({ onBack, onSignOut, onAddWallet, currentPin = "1234", onPinChanged }: SettingsScreenProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [doubleClickEnabled, setDoubleClickEnabled] = useState(true);
+  const [showChangePinModal, setShowChangePinModal] = useState(false);
+
+  const handlePinChanged = (newPin: string) => {
+    setShowChangePinModal(false);
+    onPinChanged?.(newPin);
+    Alert.alert("Success", "Your PIN has been updated", [{ text: "OK" }]);
+  };
 
   const renderSettingRow = (title: string, subtitle?: string, rightComponent?: React.ReactNode, onPress?: () => void) => (
     <TouchableOpacity style={styles.settingRow} onPress={onPress} disabled={!onPress}>
@@ -103,7 +113,7 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet }: Setti
             "Change PIN", 
             "Update your payment passcode", 
             undefined, 
-            () => console.log("Change PIN pressed")
+            () => setShowChangePinModal(true)
           )}
           {renderSeparator()}
           {renderSettingRow(
@@ -196,6 +206,13 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet }: Setti
 
         <View style={styles.bottomPadding} />
       </ScrollView>
+
+      <ChangePinModal
+        visible={showChangePinModal}
+        onClose={() => setShowChangePinModal(false)}
+        currentPin={currentPin}
+        onPinChanged={handlePinChanged}
+      />
     </SafeAreaView>
   );
 }
