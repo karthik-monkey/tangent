@@ -7,11 +7,12 @@ interface SettingsScreenProps {
   onBack?: () => void;
   onSignOut?: () => void;
   onAddWallet?: () => void;
+  onWalletSetup?: () => void;
   currentPin?: string;
   onPinChanged?: (newPin: string) => void;
 }
 
-export default function SettingsScreen({ onBack, onSignOut, onAddWallet, currentPin = "1234", onPinChanged }: SettingsScreenProps) {
+export default function SettingsScreen({ onBack, onSignOut, onAddWallet, onWalletSetup, currentPin = "1234", onPinChanged }: SettingsScreenProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [doubleClickEnabled, setDoubleClickEnabled] = useState(true);
   const [showChangePinModal, setShowChangePinModal] = useState(false);
@@ -97,7 +98,7 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, current
             "Wallet Setup", 
             "Manage your wallets and payment methods", 
             undefined, 
-            () => console.log("Card setup")
+            () => onWalletSetup?.()
           )}
         </View>
 

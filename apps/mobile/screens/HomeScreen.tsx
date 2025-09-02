@@ -13,6 +13,7 @@ interface Card {
 interface HomeScreenProps {
   onAddWallet?: () => void;
   onSignOut?: () => void;
+  onWalletSetup?: () => void;
 }
 
 const mockCards: Card[] = [
@@ -39,7 +40,7 @@ const mockCards: Card[] = [
   }
 ];
 
-export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps = {}) {
+export default function HomeScreen({ onAddWallet, onSignOut, onWalletSetup }: HomeScreenProps = {}) {
   const [activeTab, setActiveTab] = useState<'cards' | 'settings'>('cards');
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [showPaymentReady, setShowPaymentReady] = useState(false);
@@ -177,6 +178,7 @@ export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps =
             onBack={() => setActiveTab('cards')} 
             onSignOut={onSignOut} 
             onAddWallet={onAddWallet}
+            onWalletSetup={onWalletSetup}
             currentPin={userPin}
             onPinChanged={(newPin) => setUserPin(newPin)}
           />
