@@ -83,8 +83,8 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, current
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Payment Cards Section */}
-        {renderSectionHeader("PAYMENT CARDS")}
+        {/* Payment Wallets Section */}
+        {renderSectionHeader("PAYMENT WALLETS")}
         <View style={styles.section}>
           {renderSettingRow(
             "Add Wallet", 
