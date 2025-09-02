@@ -1,16 +1,20 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Switch } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Switch, Alert } from "react-native";
+import ChangePinModal from "../components/ChangePinModal";
 import WalletSelector from "../components/WalletSelector";
 
 interface SettingsScreenProps {
   onBack?: () => void;
   onSignOut?: () => void;
   onAddWallet?: () => void;
+  currentPin?: string;
+  onPinChanged?: (newPin: string) => void;
 }
 
-export default function SettingsScreen({ onBack, onSignOut, onAddWallet }: SettingsScreenProps) {
+export default function SettingsScreen({ onBack, onSignOut, onAddWallet, currentPin = "1234", onPinChanged }: SettingsScreenProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [doubleClickEnabled, setDoubleClickEnabled] = useState(true);
+  const [showChangePinModal, setShowChangePinModal] = useState(false);
   const [showWalletSelector, setShowWalletSelector] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState({
     id: "wallet1",
@@ -27,6 +31,12 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet }: Setti
     { id: "wallet4", name: "Savings Wallet", address: "0xABCDEF1234567890ABCDEF1234567890ABCDEF12", type: "Trust Wallet" },
     { id: "wallet5", name: "DeFi Wallet", address: "0x9876543210987654321098765432109876543210", type: "Phantom" },
   ];
+
+  const handlePinChanged = (newPin: string) => {
+    setShowChangePinModal(false);
+    onPinChanged?.(newPin);
+    Alert.alert("Success", "Your PIN has been updated", [{ text: "OK" }]);
+  };
 
   const handleWalletSelect = (wallet: any) => {
     setSelectedWallet(wallet);
@@ -130,7 +140,7 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet }: Setti
             "Change PIN", 
             "Update your payment passcode", 
             undefined, 
-            () => console.log("Change PIN pressed")
+            () => setShowChangePinModal(true)
           )}
           {renderSeparator()}
           {renderSettingRow(
@@ -223,6 +233,13 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet }: Setti
 
         <View style={styles.bottomPadding} />
       </ScrollView>
+
+      <ChangePinModal
+        visible={showChangePinModal}
+        onClose={() => setShowChangePinModal(false)}
+        currentPin={currentPin}
+        onPinChanged={handlePinChanged}
+      />
 
       <WalletSelector
         visible={showWalletSelector}

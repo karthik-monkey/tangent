@@ -46,6 +46,7 @@ export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps =
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [password, setPassword] = useState("");
   const [lastTap, setLastTap] = useState(0);
+  const [userPin, setUserPin] = useState("1234");
   
   const translateY = useRef(new Animated.Value(0)).current;
   
@@ -102,13 +103,12 @@ export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps =
   };
 
   const handlePasswordSubmit = () => {
-    // In a real app, this would verify against stored PIN
-    if (password === "1234") {
+    if (password === userPin) {
       setShowPasswordPrompt(false);
       setPassword("");
       setShowPaymentReady(true);
     } else {
-      Alert.alert("Incorrect Password", "Please try again.");
+      Alert.alert("Incorrect PIN", "Please try again.");
       setPassword("");
     }
   };
@@ -173,7 +173,13 @@ export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps =
     if (activeTab === 'settings') {
       return (
         <View style={styles.settingsWrapper}>
-          <SettingsScreen onBack={() => setActiveTab('cards')} onSignOut={onSignOut} onAddWallet={onAddWallet} />
+          <SettingsScreen 
+            onBack={() => setActiveTab('cards')} 
+            onSignOut={onSignOut} 
+            onAddWallet={onAddWallet}
+            currentPin={userPin}
+            onPinChanged={(newPin) => setUserPin(newPin)}
+          />
         </View>
       );
     }
@@ -247,9 +253,9 @@ export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps =
             </View>
 
             {/* Authentication Text */}
-            <Text style={styles.authTitle}>Enter Passcode</Text>
+            <Text style={styles.authTitle}>Enter PIN</Text>
             <Text style={styles.authSubtitle}>
-              Enter your passcode to view card details
+              Enter your 4-digit PIN to view card details
             </Text>
 
             {/* Password Input */}
@@ -257,7 +263,7 @@ export default function HomeScreen({ onAddWallet, onSignOut }: HomeScreenProps =
               style={styles.passwordInput}
               value={password}
               onChangeText={setPassword}
-              placeholder="Enter passcode"
+              placeholder="Enter PIN"
               placeholderTextColor="rgba(255, 255, 255, 0.5)"
               secureTextEntry={true}
               keyboardType="numeric"
