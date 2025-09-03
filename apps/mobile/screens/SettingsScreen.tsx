@@ -249,6 +249,64 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, onWalle
           </TouchableOpacity>
         </View>
 
+        {/* Delete Account Section */}
+        {renderSectionHeader("DANGER ZONE")}
+        <View style={styles.section}>
+          <TouchableOpacity style={styles.settingRow} onPress={() => {
+            Alert.alert(
+              "Delete Account",
+              "Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.",
+              [
+                {
+                  text: "Cancel",
+                  style: "cancel"
+                },
+                {
+                  text: "Delete",
+                  style: "destructive",
+                  onPress: () => {
+                    Alert.alert(
+                      "Confirm Deletion",
+                      "Please confirm that you want to permanently delete your account. This is your final warning.",
+                      [
+                        {
+                          text: "Cancel",
+                          style: "cancel"
+                        },
+                        {
+                          text: "Delete Account",
+                          style: "destructive",
+                          onPress: () => {
+                            console.log("Account deletion confirmed");
+                            Alert.alert(
+                              "Account Deleted",
+                              "Your account has been successfully deleted.",
+                              [
+                                {
+                                  text: "OK",
+                                  onPress: () => {
+                                    onSignOut?.();
+                                  }
+                                }
+                              ]
+                            );
+                          }
+                        }
+                      ]
+                    );
+                  }
+                }
+              ]
+            );
+          }}>
+            <View style={styles.settingContent}>
+              <Text style={styles.deleteAccountText}>Delete Account</Text>
+              <Text style={styles.deleteAccountSubtext}>Permanently remove your account and all data</Text>
+            </View>
+            <Text style={styles.chevron}>›</Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.bottomPadding} />
       </ScrollView>
 
@@ -373,5 +431,17 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: "#FF3B30",
     marginBottom: 2,
+  },
+  deleteAccountText: {
+    fontSize: 16,
+    fontWeight: "400",
+    color: "#FF3B30",
+    marginBottom: 2,
+  },
+  deleteAccountSubtext: {
+    fontSize: 14,
+    fontWeight: "400",
+    color: "rgba(255, 59, 48, 0.6)",
+    lineHeight: 18,
   },
 }); 
