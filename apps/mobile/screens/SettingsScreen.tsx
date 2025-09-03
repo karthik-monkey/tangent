@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Swi
 import ChangePinModal from "../components/ChangePinModal";
 import WalletSelector from "../components/WalletSelector";
 import ChangeAddressModal from "../components/ChangeAddressModal";
+import ChangePhoneModal from "../components/ChangePhoneModal";
 
 interface SettingsScreenProps {
   onBack?: () => void;
@@ -19,6 +20,8 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, onWalle
   const [showChangePinModal, setShowChangePinModal] = useState(false);
   const [showWalletSelector, setShowWalletSelector] = useState(false);
   const [showChangeAddressModal, setShowChangeAddressModal] = useState(false);
+  const [showChangePhoneModal, setShowChangePhoneModal] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("+1 (555) 123-4567");
   const [selectedWallet, setSelectedWallet] = useState({
     id: "wallet1",
     name: "Alex Garden",
@@ -66,6 +69,17 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, onWalle
     setHomeAddress(newAddress);
     setShowChangeAddressModal(false);
     Alert.alert("Success", "Your home address has been updated", [{ text: "OK" }]);
+  };
+
+  const handlePhoneChanged = (newPhone: string) => {
+    setPhoneNumber(newPhone);
+    setShowChangePhoneModal(false);
+  };
+
+  const handleRequestVerification = (phone: string) => {
+    console.log("Requesting verification for:", phone);
+    // Here you would typically call an API to send the verification code
+    // For now, we'll just log it
   };
 
   const renderSettingRow = (title: string, subtitle?: string, rightComponent?: React.ReactNode, onPress?: () => void) => (
@@ -140,9 +154,9 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, onWalle
           {renderSeparator()}
           {renderSettingRow(
             "Phone", 
-            "+1 (555) 123-4567", 
+            phoneNumber, 
             undefined, 
-            () => console.log("Phone")
+            () => setShowChangePhoneModal(true)
           )}
           {renderSeparator()}
           {renderSettingRow(
@@ -272,6 +286,14 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, onWalle
         onClose={() => setShowChangeAddressModal(false)}
         currentAddress={homeAddress}
         onAddressChanged={handleAddressChanged}
+      />
+
+      <ChangePhoneModal
+        visible={showChangePhoneModal}
+        onClose={() => setShowChangePhoneModal(false)}
+        currentPhone={phoneNumber}
+        onPhoneChanged={handlePhoneChanged}
+        onRequestVerification={handleRequestVerification}
       />
     </SafeAreaView>
   );
