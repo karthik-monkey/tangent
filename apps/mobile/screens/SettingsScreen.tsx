@@ -15,7 +15,7 @@ interface SettingsScreenProps {
 
 export default function SettingsScreen({ onBack, onSignOut, onAddWallet, onWalletSetup, currentPin = "1234", onPinChanged }: SettingsScreenProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [doubleClickEnabled, setDoubleClickEnabled] = useState(true);
+  const [doubleClickEnabled, setDoubleClickEnabled] = useState(false);
   const [showChangePinModal, setShowChangePinModal] = useState(false);
   const [showWalletSelector, setShowWalletSelector] = useState(false);
   const [showChangeAddressModal, setShowChangeAddressModal] = useState(false);
@@ -163,12 +163,14 @@ export default function SettingsScreen({ onBack, onSignOut, onAddWallet, onWalle
           {renderSeparator()}
           {renderSettingRow(
             "Allow Access When Locked", 
-            "Double-click side button to pay", 
+            "Coming soon", 
             <Switch
               value={doubleClickEnabled}
-              onValueChange={setDoubleClickEnabled}
+              onValueChange={() => {}}
+              disabled={true}
               trackColor={{ false: "rgba(120, 120, 128, 0.16)", true: "rgba(52, 199, 89, 1)" }}
-              thumbColor="white"
+              thumbColor="rgba(255, 255, 255, 0.3)"
+              style={{ opacity: 0.3 }}
             />
           )}
         </View>
