@@ -9,9 +9,34 @@ interface PhoneProps {
 export default function Phone({ onNext, onBack }: PhoneProps) {
   const [phoneNumber, setPhoneNumber] = useState("");
 
+  const formatPhoneNumber = (text: string) => {
+    // Remove all non-digit characters
+    const cleaned = text.replace(/\D/g, '');
+    
+    // Limit to 10 digits
+    const truncated = cleaned.substring(0, 10);
+    
+    // Format the number as (xxx) xxx-xxxx
+    if (truncated.length === 0) {
+      return '';
+    } else if (truncated.length <= 3) {
+      return `(${truncated}`;
+    } else if (truncated.length <= 6) {
+      return `(${truncated.slice(0, 3)}) ${truncated.slice(3)}`;
+    } else {
+      return `(${truncated.slice(0, 3)}) ${truncated.slice(3, 6)}-${truncated.slice(6)}`;
+    }
+  };
+
+  const handlePhoneChange = (text: string) => {
+    const formatted = formatPhoneNumber(text);
+    setPhoneNumber(formatted);
+  };
+
   const handleNext = () => {
-    // Pass the phone number to the parent component for navigation
-    onNext(phoneNumber || "+1234567890");
+    // Remove formatting and add country code before passing to parent
+    const cleanedNumber = phoneNumber.replace(/\D/g, '');
+    onNext(cleanedNumber ? `+1${cleanedNumber}` : "+1234567890");
   };
 
   return (
@@ -58,9 +83,10 @@ export default function Phone({ onNext, onBack }: PhoneProps) {
                     placeholder="(555) 123-4567"
                     placeholderTextColor="rgba(255, 255, 255, 0.4)"
                     value={phoneNumber}
-                    onChangeText={setPhoneNumber}
+                    onChangeText={handlePhoneChange}
                     keyboardType="phone-pad"
                     autoFocus
+                    maxLength={14}
                   />
                 </View>
               </View>
@@ -69,9 +95,9 @@ export default function Phone({ onNext, onBack }: PhoneProps) {
             {/* Continue Button */}
             <View style={styles.buttonSection}>
               <TouchableOpacity 
-                style={[styles.continueButton, !phoneNumber && styles.disabledButton]}
+                style={[styles.continueButton, phoneNumber.length < 14 && styles.disabledButton]}
                 onPress={handleNext}
-                disabled={!phoneNumber}
+                disabled={phoneNumber.length < 14}
               >
                 <Text style={styles.continueButtonText}>Continue</Text>
               </TouchableOpacity>
