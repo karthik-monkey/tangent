@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { TextInput } from 'react-native';
-import { ConvexProvider, ConvexReactClient } from "convex/react";
 import SplashScreen from './onboarding/splash';
 import SwipeableOnboarding from './onboarding/SwipeableOnboarding';
 import CreateAccount from './onboarding/CreateAccount';
@@ -23,11 +22,6 @@ import OnboardingScreen from './onboarding/loginpost';
 import GoogleSignUp from './onboarding/GoogleSignUp';
 import GoogleLogin from './onboarding/GoogleLogin';
 import WalletSetupScreen from './screens/WalletSetupScreen';
-
-const convexUrl = process.env.EXPO_PUBLIC_CONVEX_URL || 'https://your-project.convex.cloud';
-const convex = new ConvexReactClient(convexUrl, {
-  unsavedChangesWarning: false,
-});
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('splash');
@@ -269,9 +263,9 @@ export default function App() {
   };
 
   return (
-    <ConvexProvider client={convex}>
+    <>
       {renderCurrentScreen()}
       <StatusBar style="light" />
-    </ConvexProvider>
+    </>
   );
 }

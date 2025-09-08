@@ -12,7 +12,6 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "convex": "^1.26.2",
     "expo": "~53.0.22",
     "expo-blur": "^14.1.5",
     "expo-linear-gradient": "^14.1.5",
